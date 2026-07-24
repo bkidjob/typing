@@ -65,9 +65,7 @@
         }
         .hero-icon {
             width: 72px; height: 72px; margin: 0 auto 1.5rem;
-            background: linear-gradient(145deg, #d4d4d4, #787878);
-            border-radius: 18px; display: grid; place-items: center;
-            font-size: 28px; font-weight: 900; color: #3a3a3a;
+            border-radius: 18px;
             box-shadow: 0 4px 24px rgba(0,0,0,.35);
         }
         .hero h1 { font-size: clamp(2rem, 4.5vw, 3.2rem); font-weight: 800; letter-spacing: -0.03em; line-height: 1.12; margin-bottom: 1rem; }
@@ -182,7 +180,7 @@
 <nav>
     <div class="nav-inner">
         <a href="#" class="nav-brand" aria-label="LLM Typing Trainer home">
-            <div class="nav-brand-icon">T</div>
+            <img src="icon.png" alt="LLM Typing Trainer extension icon" class="nav-brand-icon">
             <span>LLM Typing</span>
         </a>
         <ul class="nav-links" id="menu">
@@ -197,8 +195,7 @@
 
 <!-- HERO -->
 <section class="hero">
-    <img src="icon.png" alt="" style="width:0;height:0;position:absolute;visibility:hidden;">
-    <div class="hero-icon">T</div>
+    <img src="icon.png" alt="LLM Typing Trainer extension icon — a stylised keyboard" class="hero-icon">
     <h1>Touch Typing That <em>Adapts to You</em></h1>
     <p class="hero-sub">Real-time heatmaps, local LLM insights, and offline practice scheduling — built for developers who want faster, more accurate coding speed.</p>
     <a href="https://chrome.google.com/webstore/detail/adaptive-typing-trainer" class="hero-cta" role="button">
