@@ -1,0 +1,946 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Adaptive Typing Trainer</title>
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/fontsource-inter@5.0.0/index.css">
+    <style>
+        *, *::before, *::after {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        :root {
+            --bg-primary: #0f1724;
+            --bg-secondary: #1a2236;
+            --bg-card: #1e2a3f;
+            --bg-card-hover: #243352;
+            --border-color: #2a3a5c;
+            --text-primary: #e2e8f0;
+            --text-secondary: #94a3b8;
+            --text-muted: #64748b;
+            --accent-blue: #5b9bd5;
+            --accent-blue-hover: #7ab0e0;
+            --accent-green: #4ade80;
+            --accent-red: #f87171;
+            --accent-yellow: #fbbf24;
+            --accent-purple: #c084fc;
+            --gradient-blue: linear-gradient(135deg, #5b9bd5 0%, #7ab0e0 100%);
+        }
+
+        html {
+            scroll-behavior: smooth;
+        }
+
+        body {
+            font-family: 'Inter', -apple-system, BlinkMacSystemFont, sans-serif;
+            background-color: var(--bg-primary);
+            color: var(--text-primary);
+            line-height: 1.6;
+            overflow-x: hidden;
+        }
+
+        /* Navigation */
+        nav {
+            position: fixed;
+            top: 0;
+            left: 0;
+            right: 0;
+            z-index: 1000;
+            background: rgba(15, 23, 36, 0.85);
+            backdrop-filter: blur(20px);
+            border-bottom: 1px solid var(--border-color);
+            padding: 0 2rem;
+        }
+
+        .nav-inner {
+            max-width: 1280px;
+            margin: 0 auto;
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            height: 64px;
+        }
+
+        .nav-logo {
+            display: flex;
+            align-items: center;
+            gap: 12px;
+            text-decoration: none;
+        }
+
+        .nav-logo-icon {
+            width: 36px;
+            height: 36px;
+            background: linear-gradient(145deg, #d4d4d4, #8a8a8a);
+            border-radius: 10px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 20px;
+            font-weight: 800;
+            color: #3a3a3a;
+            box-shadow: 0 2px 8px rgba(0,0,0,0.3), inset 0 1px 0 rgba(255,255,255,0.4);
+            position: relative;
+        }
+
+        .nav-logo-icon::after {
+            content: '';
+            position: absolute;
+            inset: 2px;
+            border-radius: 8px;
+            background: linear-gradient(145deg, #e8e8e8, #a0a0a0);
+            z-index: -1;
+        }
+
+        .nav-logo-text {
+            font-size: 14px;
+            font-weight: 700;
+            color: var(--text-secondary);
+            letter-spacing: 1.5px;
+            text-transform: uppercase;
+        }
+
+        .nav-links {
+            display: flex;
+            align-items: center;
+            gap: 2rem;
+            list-style: none;
+        }
+
+        .nav-links a {
+            color: var(--text-secondary);
+            text-decoration: none;
+            font-size: 14px;
+            font-weight: 500;
+            transition: color 0.2s;
+        }
+
+        .nav-links a:hover {
+            color: var(--text-primary);
+        }
+
+        .nav-cta {
+            background: var(--gradient-blue);
+            color: #fff !important;
+            padding: 8px 20px;
+            border-radius: 8px;
+            font-weight: 600 !important;
+            transition: transform 0.2s, box-shadow 0.2s !important;
+        }
+
+        .nav-cta:hover {
+            transform: translateY(-1px);
+            box-shadow: 0 4px 16px rgba(91, 155, 213, 0.3);
+        }
+
+        .mobile-menu-btn {
+            display: none;
+            background: none;
+            border: none;
+            color: var(--text-primary);
+            font-size: 24px;
+            cursor: pointer;
+        }
+
+        /* Hero Section */
+        .hero {
+            padding: 140px 2rem 80px;
+            text-align: center;
+            position: relative;
+            overflow: hidden;
+        }
+
+        .hero::before {
+            content: '';
+            position: absolute;
+            top: -200px;
+            left: 50%;
+            transform: translateX(-50%);
+            width: 800px;
+            height: 800px;
+            background: radial-gradient(circle, rgba(91, 155, 213, 0.08) 0%, transparent 70%);
+            pointer-events: none;
+        }
+
+        .hero-badge {
+            display: inline-flex;
+            align-items: center;
+            gap: 8px;
+            background: var(--bg-card);
+            border: 1px solid var(--border-color);
+            padding: 6px 16px;
+            border-radius: 100px;
+            font-size: 13px;
+            color: var(--text-secondary);
+            margin-bottom: 2rem;
+        }
+
+        .hero-badge span {
+            color: var(--accent-blue);
+            font-weight: 600;
+        }
+
+        .hero h1 {
+            font-size: clamp(2.5rem, 5vw, 4rem);
+            font-weight: 800;
+            line-height: 1.1;
+            margin-bottom: 1.5rem;
+            letter-spacing: -0.02em;
+        }
+
+        .hero h1 .highlight {
+            background: var(--gradient-blue);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            background-clip: text;
+        }
+
+        .hero p {
+            font-size: 1.2rem;
+            color: var(--text-secondary);
+            max-width: 640px;
+            margin: 0 auto 2.5rem;
+            line-height: 1.7;
+        }
+
+        .hero-cta {
+            display: inline-flex;
+            align-items: center;
+            gap: 10px;
+            background: var(--gradient-blue);
+            color: #fff;
+            padding: 14px 32px;
+            border-radius: 12px;
+            font-size: 16px;
+            font-weight: 600;
+            text-decoration: none;
+            transition: transform 0.2s, box-shadow 0.2s;
+            box-shadow: 0 4px 20px rgba(91, 155, 213, 0.25);
+        }
+
+        .hero-cta:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 8px 30px rgba(91, 155, 213, 0.35);
+        }
+
+        .hero-stats {
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            gap: 2rem;
+            margin-top: 2.5rem;
+            flex-wrap: wrap;
+        }
+
+        .hero-stat {
+            display: flex;
+            align-items: center;
+            gap: 8px;
+            font-size: 14px;
+            color: var(--text-secondary);
+        }
+
+        .hero-stat .icon {
+            font-size: 18px;
+        }
+
+        .hero-stat strong {
+            color: var(--text-primary);
+        }
+
+        /* Sections */
+        section {
+            padding: 80px 2rem;
+        }
+
+        .container {
+            max-width: 1280px;
+            margin: 0 auto;
+        }
+
+        .section-header {
+            text-align: center;
+            margin-bottom: 3.5rem;
+        }
+
+        .section-label {
+            display: inline-block;
+            font-size: 13px;
+            font-weight: 600;
+            color: var(--accent-blue);
+            text-transform: uppercase;
+            letter-spacing: 2px;
+            margin-bottom: 1rem;
+        }
+
+        .section-header h2 {
+            font-size: clamp(1.8rem, 3.5vw, 2.5rem);
+            font-weight: 800;
+            margin-bottom: 1rem;
+            letter-spacing: -0.02em;
+        }
+
+        .section-header p {
+            font-size: 1.1rem;
+            color: var(--text-secondary);
+            max-width: 600px;
+            margin: 0 auto;
+        }
+
+        /* Features Grid */
+        .features-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+            gap: 1.5rem;
+        }
+
+        .feature-card {
+            background: var(--bg-card);
+            border: 1px solid var(--border-color);
+            border-radius: 16px;
+            padding: 2rem;
+            transition: transform 0.3s, border-color 0.3s, box-shadow 0.3s;
+        }
+
+        .feature-card:hover {
+            transform: translateY(-4px);
+            border-color: var(--accent-blue);
+            box-shadow: 0 8px 30px rgba(91, 155, 213, 0.1);
+        }
+
+        .feature-icon {
+            font-size: 2rem;
+            margin-bottom: 1rem;
+            display: block;
+        }
+
+        .feature-card h3 {
+            font-size: 1.15rem;
+            font-weight: 700;
+            margin-bottom: 0.75rem;
+            color: var(--text-primary);
+        }
+
+        .feature-card p {
+            font-size: 0.95rem;
+            color: var(--text-secondary);
+            line-height: 1.6;
+        }
+
+        /* Screenshots */
+        .screenshots-section {
+            background: var(--bg-secondary);
+        }
+
+        .screenshots-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(350px, 1fr));
+            gap: 1.5rem;
+        }
+
+        .screenshot-card {
+            background: var(--bg-card);
+            border: 1px solid var(--border-color);
+            border-radius: 16px;
+            overflow: hidden;
+            transition: transform 0.3s, box-shadow 0.3s;
+        }
+
+        .screenshot-card:hover {
+            transform: translateY(-4px);
+            box-shadow: 0 12px 40px rgba(0, 0, 0, 0.3);
+        }
+
+        .screenshot-card img {
+            width: 100%;
+            height: auto;
+            display: block;
+        }
+
+        .screenshot-label {
+            padding: 1rem 1.5rem;
+            font-size: 0.9rem;
+            font-weight: 600;
+            color: var(--text-secondary);
+            border-top: 1px solid var(--border-color);
+        }
+
+        /* How It Works */
+        .steps-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(240px, 1fr));
+            gap: 2rem;
+            position: relative;
+        }
+
+        .steps-grid::before {
+            content: '';
+            position: absolute;
+            top: 40px;
+            left: 10%;
+            right: 10%;
+            height: 2px;
+            background: linear-gradient(90deg, var(--border-color), var(--accent-blue), var(--border-color));
+            opacity: 0.3;
+        }
+
+        .step-card {
+            text-align: center;
+            position: relative;
+            z-index: 1;
+        }
+
+        .step-number {
+            width: 56px;
+            height: 56px;
+            background: var(--bg-card);
+            border: 2px solid var(--accent-blue);
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 1.2rem;
+            font-weight: 800;
+            color: var(--accent-blue);
+            margin: 0 auto 1.5rem;
+        }
+
+        .step-card h3 {
+            font-size: 1.1rem;
+            font-weight: 700;
+            margin-bottom: 0.75rem;
+        }
+
+        .step-card p {
+            font-size: 0.9rem;
+            color: var(--text-secondary);
+            line-height: 1.6;
+        }
+
+        /* CTA Section */
+        .cta-section {
+            text-align: center;
+            position: relative;
+        }
+
+        .cta-section::before {
+            content: '';
+            position: absolute;
+            bottom: 0;
+            left: 50%;
+            transform: translateX(-50%);
+            width: 600px;
+            height: 600px;
+            background: radial-gradient(circle, rgba(91, 155, 213, 0.06) 0%, transparent 70%);
+            pointer-events: none;
+        }
+
+        .cta-box {
+            background: var(--bg-card);
+            border: 1px solid var(--border-color);
+            border-radius: 24px;
+            padding: 4rem 2rem;
+            max-width: 700px;
+            margin: 0 auto;
+            position: relative;
+        }
+
+        .cta-box h2 {
+            font-size: 2rem;
+            font-weight: 800;
+            margin-bottom: 1rem;
+        }
+
+        .cta-box p {
+            color: var(--text-secondary);
+            margin-bottom: 2rem;
+            font-size: 1.05rem;
+        }
+
+        .cta-box .hero-cta {
+            margin-bottom: 1rem;
+        }
+
+        .cta-subtext {
+            font-size: 0.85rem;
+            color: var(--text-muted);
+        }
+
+        /* Footer */
+        footer {
+            border-top: 1px solid var(--border-color);
+            padding: 4rem 2rem 2rem;
+        }
+
+        .footer-grid {
+            max-width: 1280px;
+            margin: 0 auto;
+            display: grid;
+            grid-template-columns: 2fr repeat(3, 1fr);
+            gap: 3rem;
+            margin-bottom: 3rem;
+        }
+
+        .footer-brand {
+            display: flex;
+            flex-direction: column;
+            gap: 1rem;
+        }
+
+        .footer-brand .nav-logo {
+            margin-bottom: 0.5rem;
+        }
+
+        .footer-brand p {
+            font-size: 0.9rem;
+            color: var(--text-muted);
+            line-height: 1.6;
+        }
+
+        .footer-col h4 {
+            font-size: 0.85rem;
+            font-weight: 700;
+            text-transform: uppercase;
+            letter-spacing: 1.5px;
+            color: var(--text-secondary);
+            margin-bottom: 1.25rem;
+        }
+
+        .footer-col ul {
+            list-style: none;
+            display: flex;
+            flex-direction: column;
+            gap: 0.75rem;
+        }
+
+        .footer-col a {
+            color: var(--text-muted);
+            text-decoration: none;
+            font-size: 0.9rem;
+            transition: color 0.2s;
+        }
+
+        .footer-col a:hover {
+            color: var(--accent-blue);
+        }
+
+        .footer-bottom {
+            max-width: 1280px;
+            margin: 0 auto;
+            padding-top: 2rem;
+            border-top: 1px solid var(--border-color);
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            flex-wrap: wrap;
+            gap: 1rem;
+        }
+
+        .footer-bottom p {
+            font-size: 0.85rem;
+            color: var(--text-muted);
+        }
+
+        .footer-bottom .version-badge {
+            display: inline-flex;
+            align-items: center;
+            gap: 6px;
+            background: var(--bg-card);
+            border: 1px solid var(--border-color);
+            padding: 4px 12px;
+            border-radius: 100px;
+            font-size: 0.8rem;
+            color: var(--text-secondary);
+        }
+
+        /* Animations */
+        @keyframes fadeInUp {
+            from {
+                opacity: 0;
+                transform: translateY(20px);
+            }
+            to {
+                opacity: 1;
+                transform: translateY(0);
+            }
+        }
+
+        .animate-in {
+            opacity: 0;
+            animation: fadeInUp 0.6s ease forwards;
+        }
+
+        .animate-in:nth-child(1) { animation-delay: 0.1s; }
+        .animate-in:nth-child(2) { animation-delay: 0.2s; }
+        .animate-in:nth-child(3) { animation-delay: 0.3s; }
+        .animate-in:nth-child(4) { animation-delay: 0.4s; }
+        .animate-in:nth-child(5) { animation-delay: 0.5s; }
+        .animate-in:nth-child(6) { animation-delay: 0.6s; }
+        .animate-in:nth-child(7) { animation-delay: 0.7s; }
+        .animate-in:nth-child(8) { animation-delay: 0.8s; }
+
+        /* Responsive */
+        @media (max-width: 768px) {
+            .nav-links {
+                display: none;
+                position: absolute;
+                top: 64px;
+                left: 0;
+                right: 0;
+                background: var(--bg-primary);
+                border-bottom: 1px solid var(--border-color);
+                flex-direction: column;
+                padding: 1rem 2rem 2rem;
+                gap: 1rem;
+            }
+
+            .nav-links.active {
+                display: flex;
+            }
+
+            .mobile-menu-btn {
+                display: block;
+            }
+
+            .hero {
+                padding: 120px 1.5rem 60px;
+            }
+
+            section {
+                padding: 60px 1.5rem;
+            }
+
+            .features-grid {
+                grid-template-columns: 1fr;
+            }
+
+            .screenshots-grid {
+                grid-template-columns: 1fr;
+            }
+
+            .steps-grid::before {
+                display: none;
+            }
+
+            .steps-grid {
+                grid-template-columns: 1fr;
+                gap: 2rem;
+            }
+
+            .footer-grid {
+                grid-template-columns: 1fr 1fr;
+                gap: 2rem;
+            }
+
+            .footer-brand {
+                grid-column: 1 / -1;
+            }
+
+            .hero-stats {
+                gap: 1rem;
+            }
+
+            .cta-box {
+                padding: 3rem 1.5rem;
+            }
+        }
+
+        @media (max-width: 480px) {
+            .footer-grid {
+                grid-template-columns: 1fr;
+            }
+
+            .footer-bottom {
+                flex-direction: column;
+                text-align: center;
+            }
+        }
+    </style>
+</head>
+<body>
+
+    <!-- Navigation -->
+    <nav>
+        <div class="nav-inner">
+            <a href="#" class="nav-logo">
+                <div class="nav-logo-icon">T</div>
+                <span class="nav-logo-text">Adaptive Trainer</span>
+            </a>
+            <ul class="nav-links" id="navLinks">
+                <li><a href="#features">Features</a></li>
+                <li><a href="#screenshots">Screenshots</a></li>
+                <li><a href="#how-it-works">How It Works</a></li>
+                <li><a href="https://chrome.google.com/webstore/detail/adaptive-typing-trainer" class="nav-cta">Install</a></li>
+            </ul>
+            <button class="mobile-menu-btn" id="mobileMenuBtn" aria-label="Toggle menu">☰</button>
+        </div>
+    </nav>
+
+    <!-- Hero Section -->
+    <section class="hero">
+        <div class="container">
+            <div class="hero-badge">
+                <span>NEW</span> v1.0.26 — Now with Local LLM Integration
+            </div>
+            <h1>
+                Master Touch Typing with<br>
+                <span class="highlight">AI-Powered Feedback</span>
+            </h1>
+            <p>
+                An advanced typing trainer that adapts to your skill level, provides real-time insights, and helps you build muscle memory faster than ever before.
+            </p>
+            <a href="https://chrome.google.com/webstore/detail/adaptive-typing-trainer" class="hero-cta">
+                <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"/><polyline points="7 10 12 15 17 10"/><line x1="12" y1="15" x2="12" y2="3"/></svg>
+                Install on Chrome
+            </a>
+            <div class="hero-stats">
+                <div class="hero-stat">
+                    <span class="icon">⭐</span>
+                    <strong>4.9/5</strong> rating
+                </div>
+                <div class="hero-stat">
+                    <span class="icon">👥</span>
+                    <strong>10,000+</strong> users
+                </div>
+                <div class="hero-stat">
+                    <span class="icon">🔒</span>
+                    Offline-first
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Features Section -->
+    <section id="features">
+        <div class="container">
+            <div class="section-header">
+                <span class="section-label">Features</span>
+                <h2>Powerful Features for Serious Learners</h2>
+                <p>Everything you need to improve your typing speed and accuracy, backed by intelligent analytics.</p>
+            </div>
+            <div class="features-grid">
+                <div class="feature-card animate-in">
+                    <span class="feature-icon">⌨️</span>
+                    <h3>Interactive Keyboard Heatmap</h3>
+                    <p>Visualize your typing performance in real-time with speed and error heatmaps. Identify weak keys and track improvement over time with our responsive QWERTY keyboard visualization.</p>
+                </div>
+                <div class="feature-card animate-in">
+                    <span class="feature-icon">🎨</span>
+                    <h3>Beautiful Editor Themes</h3>
+                    <p>Choose between Atom One Light and One Dark themes. Fully responsive color schemes designed for comfortable, extended practice sessions without eye strain.</p>
+                </div>
+                <div class="feature-card animate-in">
+                    <span class="feature-icon"></span>
+                    <h3>Smart ASCII Normalization</h3>
+                    <p>Type special characters and accented letters (é, ñ, ß, ≤) using standard QWERTY layouts. Custom character mappings let you define your own replacement pairs.</p>
+                </div>
+                <div class="feature-card animate-in">
+                    <span class="feature-icon">🤖</span>
+                    <h3>Local LLM Integration</h3>
+                    <p>Connect to local AI endpoints (Ollama, LM Studio, Qwil) for smart text cleanup, difficulty estimation, and personalized typing coaching suggestions.</p>
+                </div>
+                <div class="feature-card animate-in">
+                    <span class="feature-icon">📊</span>
+                    <h3>Adaptive Lesson Generation</h3>
+                    <p>Get custom lessons generated based on your trouble keys and performance stats. The system learns from your mistakes and creates targeted practice exercises.</p>
+                </div>
+                <div class="feature-card animate-in">
+                    <span class="feature-icon">💡</span>
+                    <h3>Contextual Insights Panel</h3>
+                    <p>Receive AI-powered explanations for code snippets or sentences as you type. Automatically updates when you complete each line with relevant context and tips.</p>
+                </div>
+                <div class="feature-card animate-in">
+                    <span class="feature-icon">📈</span>
+                    <h3>Progress Tracking & Analytics</h3>
+                    <p>Track your WPM, accuracy, and session history with detailed charts. Monthly calendar view shows practice intensity and streak tracking keeps you motivated.</p>
+                </div>
+                <div class="feature-card animate-in">
+                    <span class="feature-icon">💾</span>
+                    <h3>Offline-First Storage</h3>
+                    <p>All your data is stored locally using chrome.storage and IndexedDB. Export/import your entire profile, lessons, and statistics with JSON backup utilities.</p>
+                </div>
+                <div class="feature-card animate-in">
+                    <span class="feature-icon">🎯</span>
+                    <h3>Custom Lessons & Code Practice</h3>
+                    <p>Practice with preloaded lessons in Rust, HTML, CSS, JavaScript, or import your own text files. Perfect for developers wanting to improve coding speed.</p>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Screenshots Section -->
+    <section id="screenshots" class="screenshots-section">
+        <div class="container">
+            <div class="section-header">
+                <span class="section-label">Screenshots</span>
+                <h2>See It In Action</h2>
+                <p>A clean, modern interface designed for focus and productivity.</p>
+            </div>
+            <div class="screenshots-grid">
+                <div class="screenshot-card animate-in">
+                    <img src="https://image.qwenlm.ai/public_source/a919e99a-b160-41b4-9f85-d7ccd55da9e9/119ae0732-b134-4c6e-85d2-ff118698ea32.png" alt="Main Typing Interface with Keyboard Heatmap" loading="lazy">
+                    <div class="screenshot-label">Main Typing Interface — Dark Theme with Heatmap</div>
+                </div>
+                <div class="screenshot-card animate-in">
+                    <img src="https://image.qwenlm.ai/public_source/a919e99a-b160-41b4-9f85-d7ccd55da9e9/159601561-0158-4556-ba5b-7ea7fedded88.png" alt="Progress Dashboard with Calendar and Charts" loading="lazy">
+                    <div class="screenshot-label">Progress Dashboard — Calendar & Analytics</div>
+                </div>
+                <div class="screenshot-card animate-in">
+                    <img src="https://image.qwenlm.ai/public_source/a919e99a-b160-41b4-9f85-d7ccd55da9e9/114d830cb-81fc-40e5-87f5-c8459289db69.png" alt="Settings Page with Configuration Options" loading="lazy">
+                    <div class="screenshot-label">Settings — Themes, Preferences & LLM Config</div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- How It Works Section -->
+    <section id="how-it-works">
+        <div class="container">
+            <div class="section-header">
+                <span class="section-label">How It Works</span>
+                <h2>Get Started in Minutes</h2>
+                <p>No account required. Install and start improving your typing immediately.</p>
+            </div>
+            <div class="steps-grid">
+                <div class="step-card animate-in">
+                    <div class="step-number">1</div>
+                    <h3>Install Extension</h3>
+                    <p>Add Adaptive Typing Trainer to Chrome from the Web Store. Takes less than 30 seconds.</p>
+                </div>
+                <div class="step-card animate-in">
+                    <div class="step-number">2</div>
+                    <h3>Choose Your Lesson</h3>
+                    <p>Select from preloaded lessons, import custom text, or generate AI-powered adaptive lessons.</p>
+                </div>
+                <div class="step-card animate-in">
+                    <div class="step-number">3</div>
+                    <h3>Start Typing</h3>
+                    <p>Practice with real-time feedback, keyboard heatmaps, and instant WPM/accuracy tracking.</p>
+                </div>
+                <div class="step-card animate-in">
+                    <div class="step-number">4</div>
+                    <h3>Track Progress</h3>
+                    <p>Review your improvement over time with detailed analytics and personalized coaching tips.</p>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- CTA Section -->
+    <section class="cta-section">
+        <div class="container">
+            <div class="cta-box">
+                <h2>Ready to Transform Your Typing?</h2>
+                <p>Join 10,000+ users who are typing faster and more accurately every day.</p>
+                <a href="https://chrome.google.com/webstore/detail/adaptive-typing-trainer" class="hero-cta">
+                    <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"/><polyline points="7 10 12 15 17 10"/><line x1="12" y1="15" x2="12" y2="3"/></svg>
+                    Install on Chrome
+                </a>
+                <p class="cta-subtext">No credit card required • Works offline • Privacy-focused</p>
+            </div>
+        </div>
+    </section>
+
+    <!-- Footer -->
+    <footer>
+        <div class="footer-grid">
+            <div class="footer-brand">
+                <a href="#" class="nav-logo">
+                    <div class="nav-logo-icon">T</div>
+                    <span class="nav-logo-text">Adaptive Trainer</span>
+                </a>
+                <p>Built with ❤️ for better typing. An open-source Chrome extension that helps you master touch typing with AI-powered feedback.</p>
+            </div>
+            <div class="footer-col">
+                <h4>Product</h4>
+                <ul>
+                    <li><a href="#features">Features</a></li>
+                    <li><a href="#screenshots">Screenshots</a></li>
+                    <li><a href="CHANGELOG.md">Changelog</a></li>
+                    <li><a href="docs/architecture.md">Documentation</a></li>
+                </ul>
+            </div>
+            <div class="footer-col">
+                <h4>Resources</h4>
+                <ul>
+                    <li><a href="README.md">Getting Started</a></li>
+                    <li><a href="docs/storage.md">Data Storage</a></li>
+                    <li><a href="docs/decisions.md">Design Decisions</a></li>
+                    <li><a href="https://github.com">GitHub Repository</a></li>
+                </ul>
+            </div>
+            <div class="footer-col">
+                <h4>Support</h4>
+                <ul>
+                    <li><a href="docs/messaging.md">Contact Us</a></li>
+                    <li><a href="#">FAQ</a></li>
+                    <li><a href="#">Privacy Policy</a></li>
+                    <li><a href="#">Terms of Service</a></li>
+                </ul>
+            </div>
+        </div>
+        <div class="footer-bottom">
+            <p>© 2024 Adaptive Typing Trainer. Built with ❤️ for better typing.</p>
+            <div style="display:flex;gap:0.75rem;flex-wrap:wrap;">
+                <span class="version-badge">v1.0.26</span>
+                <span class="version-badge">Manifest V3</span>
+                <span class="version-badge">Open Source</span>
+            </div>
+        </div>
+    </footer>
+
+    <script>
+        // Mobile menu toggle
+        const mobileMenuBtn = document.getElementById('mobileMenuBtn');
+        const navLinks = document.getElementById('navLinks');
+
+        mobileMenuBtn.addEventListener('click', () => {
+            navLinks.classList.toggle('active');
+            mobileMenuBtn.textContent = navLinks.classList.contains('active') ? '✕' : '☰';
+        });
+
+        // Close mobile menu on link click
+        navLinks.querySelectorAll('a').forEach(link => {
+            link.addEventListener('click', () => {
+                navLinks.classList.remove('active');
+                mobileMenuBtn.textContent = '☰';
+            });
+        });
+
+        // Intersection Observer for scroll animations
+        const observerOptions = {
+            threshold: 0.1,
+            rootMargin: '0px 0px -50px 0px'
+        };
+
+        const observer = new IntersectionObserver((entries) => {
+            entries.forEach(entry => {
+                if (entry.isIntersecting) {
+                    entry.target.style.opacity = '1';
+                    entry.target.style.transform = 'translateY(0)';
+                }
+            });
+        }, observerOptions);
+
+        document.querySelectorAll('.animate-in').forEach(el => {
+            el.style.opacity = '0';
+            el.style.transform = 'translateY(20px)';
+            el.style.transition = 'opacity 0.6s ease, transform 0.6s ease';
+            observer.observe(el);
+        });
+
+        // Navbar background on scroll
+        const nav = document.querySelector('nav');
+        window.addEventListener('scroll', () => {
+            if (window.scrollY > 20) {
+                nav.style.background = 'rgba(15, 23, 36, 0.95)';
+            } else {
+                nav.style.background = 'rgba(15, 23, 36, 0.85)';
+            }
+        });
+    </script>
+</body>
+</html>
