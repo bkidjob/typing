@@ -1,0 +1,215 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Privacy Policy — Adaptive Typing Trainer</title>
+    <style>
+        /* Quick-reset intentionally liberal so the page looks good anywhere */
+        *, *::before, *::after { margin: 0; padding: 0; box-sizing: border-box; }
+        :root {
+            --bg: #f8fafc;
+            --text: #1e293b;
+            --muted: #475569;
+            --accent: #2563eb;
+            --border: #e2e8f0;
+        }
+        html { scroll-behavior: smooth; }
+        body {
+            font: 16px / 1.75 -apple-system, BlinkMacSystemFont, 'Inter', 'Segoe UI', Roboto, sans-serif;
+            background: var(--bg);
+            color: var(--text);
+        }
+        a { color: var(--accent); text-decoration: none; }
+        a:hover { text-decoration: underline; }
+
+        .wrap { max-width: 760px; margin: 0 auto; padding: 4rem 2rem; }
+
+        h1 { font-size: clamp(1.8rem, 3vw, 2.4rem); font-weight: 800; letter-spacing: -0.02em; margin-bottom: 0.5rem; }
+        .updated { color: var(--muted); font-size: 0.9rem; margin-bottom: 2.5rem; }
+
+        h2 { font-size: 1.3rem; font-weight: 700; margin-top: 2.5rem; margin-bottom: 0.75rem; letter-spacing: -0.01em; }
+        h3 { font-size: 1.05rem; font-weight: 600; margin-top: 2rem; margin-bottom: 0.5rem; }
+        p { margin-bottom: 1rem; color: var(--muted); line-height: 1.75; }
+        ul { padding-left: 1.25rem; margin-bottom: 1rem; }
+        li { margin-bottom: 0.5rem; color: var(--muted); }
+
+        table { width: 100%; border-collapse: collapse; margin: 1rem 0 1.5rem; font-size: 0.9rem; }
+        th { text-align: left; padding: 0.65rem 0.75rem; font-weight: 600; color: var(--text); border-bottom: 2px solid var(--border); }
+        td { padding: 0.6rem 0.75rem; border-bottom: 1px solid var(--border); color: var(--muted); }
+
+        code { background: #eef2f7; padding: 2px 6px; border-radius: 4px; font-size: 0.88em; }
+
+        .logo-row { display: flex; align-items: center; gap: 14px; margin-bottom: 2rem; }
+        .logo-icon {
+            width: 48px; height: 48px; background: linear-gradient(145deg, #ccc, #787878);
+            border-radius: 12px; display: grid; place-items: center;
+            font-weight: 900; font-size: 20px; color: #3a3a3a;
+        }
+        .logo-text { font-size: 1.05rem; font-weight: 700; color: var(--text); }
+
+        /* Back-link (optional) */
+        .back { display: inline-block; margin-bottom: 2rem; font-size: 0.9rem; color: var(--muted); }
+        .back:hover { color: var(--accent); text-decoration: none; }
+
+        @media (max-width: 600px) { .wrap { padding: 2.5rem 1.2rem; } table, th, td { display: block; width: 100%; } tr { margin-bottom: 0.75rem; display: block; border-bottom: 1px solid var(--border); } th, td { padding: 0.4rem; } }
+    </style>
+</head>
+<body>
+<div class="wrap">
+
+    <a class="back" href="index.html">← Back to Adaptive Typing Trainer</a>
+
+    <div class="logo-row">
+        <div class="logo-icon" aria-hidden="true">T</div>
+        <span class="logo-text">Adaptive Typing Trainer — Privacy Policy</span>
+    </div>
+
+    <p class="updated">Last updated: July 2026</p>
+
+    <!-- ── Scope ────────────────────────── -->
+    <h2>Scope</h2>
+    <p>This Privacy Policy describes how the <strong>Adaptive Typing Trainer</strong> Chrome Extension ("extension", "we", "our") collects, uses, stores, and shares your data when you use the extension in Google Chrome.</p>
+
+    <!-- ── Data We Collect ──────────────── -->
+    <h2>Data We Collect</h2>
+
+    <h3>Typing Sessions</h3>
+    <p>Each typing session produces metrics stored locally in IndexedDB:</p>
+    <ul>
+        <li>Words per minute (WPM) and characters per minute (CPM)</li>
+        <li>Accuracy percentage</li>
+        <li>Error count and duration</li>
+        <li>Session timestamp and challenge title</li>
+    </ul>
+
+    <h3>Key Statistics</h3>
+    <p>Per-character performance data is stored in IndexedDB:</p>
+    <ul>
+        <li>Total presses per character</li>
+        <li>Average press latency (milliseconds)</li>
+        <li>Error count per character</li>
+    </ul>
+
+    <h3>Lesson Content</h3>
+    <p>Text from lessons — both preloaded and user-imported — is stored locally in IndexedDB for practice purposes.</p>
+    <ul>
+        <li>Includes code, prose, or any text the user imports.</li>
+        <li>No metadata (filename, author) is collected from imported files.</li>
+    </ul>
+
+    <h3>User Preferences</h3>
+    <p>The following settings are stored in <code>chrome.storage.local</code>:</p>
+    <ul>
+        <li>Theme (Atom One Light / Atom One Dark)</li>
+        <li>Operating system profile (macOS, Windows, Linux)</li>
+        <li>Keyboard form factor (MacBook, Desktop ANSI, Desktop ISO)</li>
+        <li>Logical layout (QWERTY, Dvorak, Colemak)</li>
+        <li>Finger guide visibility</li>
+        <li>Error behaviour (stop cursor / forgive from error) and whitespace display style</li>
+        <li>Custom character mappings (e.g. <code>ß → ss</code>)</li>
+    </ul>
+
+    <h3>LLM Endpoint Configuration</h3>
+    <p>If you configure a local LLM, these values are stored in <code>chrome.storage.local</code>:</p>
+    <ul>
+        <li>Endpoint URL (e.g. <code>http://localhost:1234/v1</code>)</li>
+        <li>Optional API key (bearer token)</li>
+        <li>Model identifier</li>
+    </ul>
+
+    <h3>Practice Schedule &amp; Lockout Goals</h3>
+    <p>Daily goals (character count, time limit, auto-pause) and lockout expiry timestamps are stored in IndexedDB and <code>chrome.storage.local</code>.</p>
+
+    <h3>LLM Query Payloads (network traffic only)</h3>
+    <p>When you use the Insights Panel or Adaptive Lesson Generation, the following data is sent to your configured LLM endpoint:</p>
+    <ul>
+        <li>The text of the current code line or sentence being typed</li>
+        <li>Your most common error characters and trouble keys (for lesson generation)</li>
+    </ul>
+
+    <!-- ── Data We Do NOT Collect ───────── -->
+    <h2>Data We Do Not Collect</h2>
+    <ul>
+        <li><strong>No personally identifiable information</strong> (Name, email address, phone number, or profile picture)</li>
+        <li><strong>No health or biometric data</strong></li>
+        <li><strong>No financial or payment information</strong></li>
+        <li><strong>No personal communications</strong> (email, messages, chats)</li>
+        <li><strong>No device location</strong> (GPS or Wi-Fi triangulation)</li>
+        <li><strong>No web history</strong> (pages visited outside the extension tab)</li>
+    </ul>
+
+    <!-- ── How We Use Data ──────────────── -->
+    <h2>How We Use Your Data</h2>
+    <p>Data is stored and used solely for the extension's core features:</p>
+    <ul>
+        <li><strong>Typing speed and accuracy tracking</strong> — WPM, CPM, and accuracy charts</li>
+        <li><strong>Keyboard heatmaps</strong> — speed and error overlays on the virtual keyboard</li>
+        <li><strong>Adaptive lesson generation</strong> — generating lessons focused on your trouble keys</li>
+        <li><strong>Practice scheduling</strong> — daily goals, offline lockout enforcement, progress calendar</li>
+        <li><strong>LLM insights</strong> — contextual explanations for lines or paragraphs you are typing</li>
+        <li><strong>Profile backup &amp; restore</strong> — JSON export/import for migration or archiving</li>
+    </ul>
+
+    <!-- ── Data Sharing &amp; Third Parties ─── -->
+    <h2>Data Sharing</h2>
+    <p><strong>We do not sell or share user data with any third party.</strong></p>
+    <p>The only clientside network requests leave your device are to your own configured LLM endpoint (e.g. Ollama running at <code>http://localhost:1234</code>). That server may store responses briefly in its own cache; this extension does not control that server.</p>
+
+    <!-- ── Data Storage ─────────────────── -->
+    <h2>Data Storage</h2>
+    <p>All extension data persists on your device after you close the browser tab:</p>
+    <ul>
+        <li><strong>IndexedDB</strong> — sessions, key statistics, lesson text, schedule goals (located under <code>chrome-extension://</code> origin storage)</li>
+        <li><strong><code>chrome.storage.local</code></strong> — user preferences, LLM endpoint, API key (also persisted locally)</li>
+    </ul>
+    <p>Data can be cleared when you uninstall the extension or manually via the Backup &amp; Restore settings panel.</p>
+
+    <!-- ── Permissions & Data ───────────── -->
+    <h2>Permissions &amp; Corresponding Data</h2>
+    <table>
+        <thead><tr><th>Permission</th><th>Data Accessed</th><th>Purpose</th></tr></thead>
+        <tbody>
+            <tr><td><code>storage</code></td><td>Preferences, theme, API key, schedule lockout</td><td>Persisting your settings between sessions</td></tr>
+            <tr><td><code>tabs</code></td><td>Extension tab URL and window identifier</td><td>Open, focus, or close the trainer tab on extension icon click</td></tr>
+        </tbody>
+    </table>
+
+    <!-- ── Host Permissions & Data ──────── -->
+    <h2>Host Permissions &amp; Corresponding Data</h2>
+    <table>
+        <thead><tr><th>Host Permission</th><th>Data Accessed / Sent</th><th>Purpose</th></tr></thead>
+        <tbody>
+            <tr><td><code>http://localhost/*</code></td><td>Current line or sentence text + stats → POST <code>/v1/chat/completions</code></td><td>Connect to local LLM (Ollama, LM Studio)</td></tr>
+            <tr><td><code>http://127.0.0.1/*</code></td><td>Same as above</td><td>Connect to local LLM at explicit loopback address</td></tr>
+            <tr><td><code>https://*/*</code></td><td>Same query types, potentially remote</td><td>Connect to remote or HTTPS local LLM endpoints (including those using self-signed TLS)</td></tr>
+        </tbody>
+    </table>
+
+    <!-- ── Children's Data ──────────────── -->
+    <h2>Children's Data</h2>
+    <p>This extension does not target children under the age of 13 and does not collect any data from children. It is designed for general audiences.</p>
+
+    <!-- ── Data Security ─────────────────── -->
+    <h2>Data Security</h2>
+    <p>All data is stored locally — no cloud databases. The extension uses a Content Security Policy (CSP) that blocks remote script blob injection, and all dynamic HTML content is wrapped in a sanitiser that strips <code>&lt;script&gt;</code>, <code>&lt;iframe&gt;</code>, and event handler attributes before injection.</p>
+
+    <!-- ── Your Rights ──────────────────── -->
+    <h2>Your Rights</h2>
+    <ul>
+        <li><strong>Export</strong> — Use the built-in Backup feature to download a complete JSON archive of all your sessions, lessons, key statistics, and preferences.</li>
+        <li><strong>Clear</strong> — Uninstall the extension or clear its site data via Chrome settings (Settings → Extensions → Extension details → Site data).</li>
+        <li><strong>Edit</strong> — Import custom lessons, edit custom character mappings, or adjust any displayed values at any time.</li>
+    </ul>
+
+    <!-- ── Policy Changes ───────────────── -->
+    <h2>Changes to This Policy</h2>
+    <p>If we materially change how data is collected or shared, we will update this page and set a new "Last updated" date. Updates are effective immediately upon publication.</p>
+
+    <!-- ── Contact ──────────────────────── -->
+    <h2>Contact</h2>
+    <p>For questions about this privacy policy or our data practices, visit the GitHub repository for Adaptive Typing Trainer and open an issue.</p>
+
+</div>
+</body>
+</html>
