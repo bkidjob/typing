@@ -378,10 +378,11 @@
     document.querySelectorAll('.reveal').forEach(el => obs.observe(el));
 
     // Image pop-up on hover — smooth expand to 1280×800 at screen centre
-    let expandEnabled = localStorage.getItem('imgExpand') !== 'off';
+    let expandEnabled = localStorage.getItem('imgExpand') === 'on';
 
     const toggleTrack = document.querySelector('#expandToggle .toggle-track');
     const updateToggle = () => { toggleTrack.classList.toggle('on', expandEnabled); };
+    updateToggle();
 
     document.getElementById('expandToggle').addEventListener('click', () => {
         expandEnabled = !expandEnabled;
