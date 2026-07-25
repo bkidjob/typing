@@ -366,8 +366,6 @@
     document.querySelectorAll('.reveal').forEach(el => obs.observe(el));
 
     // Image pop-up on hover — smooth expand to 1280×800 at screen centre
-    // Disabled on touch devices (hover: none) where it doesn't work reliably
-    if (window.matchMedia('(hover: hover)').matches) {
 
     const stepImages = document.querySelectorAll('.step-image img');
     let overlay = null;
@@ -375,6 +373,7 @@
 
     stepImages.forEach(img => {
         img.addEventListener('mouseenter', () => {
+            if (window.innerWidth < 768) return;
             if (hideTimeout) { clearTimeout(hideTimeout); hideTimeout = null; }
 
             stepImages.forEach(other => { if (other !== img) other.classList.add('dim'); });
@@ -405,7 +404,6 @@
             }, 100);
         });
     });
-    }
 </script>
 
 </body>
