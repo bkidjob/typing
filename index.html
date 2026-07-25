@@ -59,6 +59,14 @@
         }
         .nav-install:hover { transform: translateY(-1px); box-shadow: 0 4px 16px rgba(91,155,213,.3); }
         .nav-hamburger { display: none; background: none; border: none; color: var(--text); font-size: 22px; cursor: pointer; }
+        .nav-toggle { display: flex; align-items: center; gap: 6px; background: none; border: 1px solid var(--border); color: var(--muted); font-size: 12px; padding: 4px 10px; border-radius: 6px; cursor: pointer; transition: color .2s, border-color .2s; margin-left: auto; margin-right: auto; position: relative; }
+        .nav-toggle:hover { color: var(--text); border-color: var(--accent); }
+        .nav-toggle .toggle-track { width: 32px; height: 18px; border-radius: 9px; background: var(--surface-2); position: relative; transition: background .2s; }
+        .nav-toggle .toggle-track.on { background: var(--accent); }
+        .nav-toggle .toggle-thumb { position: absolute; top: 2px; left: 2px; width: 14px; height: 14px; border-radius: 50%; background: #fff; transition: transform .2s; }
+        .nav-toggle .toggle-track.on .toggle-thumb { transform: translateX(14px); }
+        .nav-toggle::after { content: 'Expand images on hover'; position: absolute; top: calc(100% + 8px); left: 50%; transform: translateX(-50%) translateY(-4px); background: var(--surface-2); color: var(--muted); font-size: 11px; padding: 4px 10px; border-radius: 6px; white-space: nowrap; opacity: 0; pointer-events: none; transition: opacity .2s, transform .2s; z-index: 200; }
+        .nav-toggle:hover::after { opacity: 1; transform: translateX(-50%) translateY(0); }
 
         /* ── HERO ────────────────────────────── */
         .hero {
@@ -174,6 +182,7 @@
         @media (max-width: 768px) {
             .nav-links { display: none; }
             .nav-hamburger { display: block; }
+            .nav-toggle { display: none; }
             .step-row, .step-row.reverse { grid-template-columns: 1fr; direction: ltr; gap: 1.5rem; }
             .hero { padding: 2.5rem 1.25rem .5rem; }
             section, .walkthrough { padding-left: 1.25rem; padding-right: 1.25rem; }
@@ -193,6 +202,9 @@
             <img src="icon.png" alt="LLM Typing Trainer extension icon" class="nav-brand-icon">
             <span>LLM Typing</span>
         </a>
+        <button class="nav-toggle" id="expandToggle" aria-label="Toggle image expand on hover">
+            <span class="toggle-track on"><span class="toggle-thumb"></span></span>
+        </button>
         <ul class="nav-links" id="menu">
             <li><a href="#walkthrough">How It Works</a></li>
             <li><a href="#features">Features</a></li>
@@ -366,6 +378,20 @@
     document.querySelectorAll('.reveal').forEach(el => obs.observe(el));
 
     // Image pop-up on hover — smooth expand to 1280×800 at screen centre
+    let expandEnabled = localStorage.getItem('imgExpand') !== 'off';
+
+    const toggleTrack = document.querySelector('#expandToggle .toggle-track');
+    const updateToggle = () => { toggleTrack.classList.toggle('on', expandEnabled); };
+
+    document.getElementById('expandToggle').addEventListener('click', () => {
+        expandEnabled = !expandEnabled;
+        localStorage.setItem('imgExpand', expandEnabled ? 'on' : 'off');
+        updateToggle();
+        if (!expandEnabled && overlay) {
+            overlay.classList.remove('visible');
+            overlay.addEventListener('transitionend', () => { overlay.remove(); overlay = null; }, { once: true });
+        }
+    });
 
     const stepImages = document.querySelectorAll('.step-image img');
     let overlay = null;
@@ -374,6 +400,7 @@
     stepImages.forEach(img => {
         img.addEventListener('mouseenter', () => {
             if (window.innerWidth < 768) return;
+            if (!expandEnabled) return;
             if (hideTimeout) { clearTimeout(hideTimeout); hideTimeout = null; }
 
             stepImages.forEach(other => { if (other !== img) other.classList.add('dim'); });
