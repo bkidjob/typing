@@ -137,7 +137,8 @@
         .bullets li { display: flex; align-items: flex-start; gap: 10px; font-size: 0.95rem; color: var(--text); }
         .bullets li::before { content: "✦"; color: var(--accent-bright); font-weight: bold; }
 
-.step-image {
+.step-row { position: relative; }
+        .step-image {
             border-radius: var(--radius); background: var(--surface);
             box-shadow: 0 20px 48px rgba(0,0,0,.5); border: 1px solid var(--border);
             transition: border-color 0.3s ease, transform 0.3s ease;
@@ -147,38 +148,34 @@
         .step-image:hover { border-color: var(--border-glow); transform: scale(2) translateZ(0); }
         .step-image img { width: 100%; height: auto; display: block; }
 
-        /* Custom tooltip — appears below image, wraps to image width */
-        .step-image[data-tooltip] { cursor: help; }
-        .step-image[data-tooltip]::after {
-            content: attr(data-tooltip);
+        /* Tooltip — sibling of .step-image, not a child, so it doesn't inherit scale(2) */
+        .step-tooltip {
             position: absolute; z-index: 99999;
             top: calc(100% + 12px); left: 50%; transform: translate(-50%, 0);
-            max-width: 640px; width: 100%;
+            width: 640px; max-width: 640px;
             padding: 10px 16px; border-radius: 8px;
             background: var(--surface-hover); border: 1px solid var(--border-glow);
             color: var(--text); font-size: 12px; line-height: 1.6;
             white-space: normal; word-break: break-word;
             opacity: 0; pointer-events: none;
-            transition: opacity 0.2s ease;
+            transition: opacity 0.2s ease, font-size 0.3s ease;
             box-shadow: 0 8px 24px rgba(0,0,0,.5);
             text-align: center;
         }
-        .step-image[data-tooltip]::before {
+        .step-tooltip::before {
             content: ''; position: absolute; z-index: 99999;
-            top: calc(100% + 2px); left: 50%; transform: translate(-50%, 0);
-            border: 6px solid transparent; border-top-color: var(--surface-hover);
-            opacity: 0; transition: opacity 0.2s ease;
+            top: calc(0% - 8px); left: 50%; transform: translate(-50%, 0);
+            border: 6px solid transparent; border-bottom-color: var(--surface-hover);
+            opacity: inherit;
         }
-        .step-image[data-tooltip]:hover::after,
-        .step-image[data-tooltip]:hover::before { opacity: 1; }
+        .step-image:hover + .step-tooltip { opacity: 1; font-size: 24px; }
 
         /* Hero screenshot tooltip wrapper */
         .window-wrapper { position: relative; display: inline-block; }
-        .window-wrapper[data-tooltip]::after {
-            content: attr(data-tooltip);
+        .window-tooltip {
             position: absolute; z-index: 99999;
             top: calc(100% + 12px); left: 50%; transform: translate(-50%, 0);
-            max-width: 640px; width: 100%;
+            width: 640px; max-width: 640px;
             padding: 10px 16px; border-radius: 8px;
             background: var(--surface-hover); border: 1px solid var(--border-glow);
             color: var(--text); font-size: 12px; line-height: 1.6;
@@ -188,14 +185,12 @@
             box-shadow: 0 8px 24px rgba(0,0,0,.5);
             text-align: center;
         }
-        .window-wrapper[data-tooltip]::before {
+        .window-tooltip::before {
             content: ''; position: absolute; z-index: 99999;
-            top: calc(100% + 2px); left: 50%; transform: translate(-50%, 0);
-            border: 6px solid transparent; border-top-color: var(--surface-hover);
-            opacity: 0; transition: opacity 0.2s ease;
+            top: calc(0% - 8px); left: 50%; transform: translate(-50%, 0);
+            border: 6px solid transparent; border-bottom-color: var(--surface-hover);
         }
-        .window-wrapper[data-tooltip]:hover::after,
-        .window-wrapper[data-tooltip]:hover::before { opacity: 1; }
+        .window-wrapper:hover + .window-tooltip { opacity: 1; }
 
         /* Dim everything else when a screenshot is hovered */
         .walkthrough:has(.step-image:hover) .step-row:not(:hover),
@@ -255,6 +250,7 @@
         @media (max-width: 900px) {
             .step-row, .step-row.reverse { grid-template-columns: 1fr; gap: 2rem; }
             .step-row.reverse .step-text { order: -1; }
+            .step-tooltip, .window-tooltip { width: 100%; max-width: 640px; font-size: 12px; }
         }
         @media (max-width: 768px) {
             .nav-links { display: none; flex-direction: column; position: absolute; top: 64px; left: 0; right: 0; background: var(--bg); border-bottom: 1px solid var(--border); padding: 1.5rem; gap: 1.5rem; z-index: 101; }
@@ -300,11 +296,12 @@
     </a>
 
     <div class="hero-screenshot reveal">
-        <div class="window-wrapper" data-tooltip="Main typing interface showing code block being typed and a highly responsive, color-coded keyboard heatmap below">
+        <div class="window-wrapper" style="cursor: help;">
             <div class="window">
                 <img src="screen01.png" alt="Main typing interface showing code block being typed and a highly responsive, color-coded keyboard heatmap below">
             </div>
         </div>
+        <div class="window-tooltip">Main typing interface showing code block being typed and a highly responsive, color-coded keyboard heatmap below</div>
     </div>
 </section>
 
@@ -314,11 +311,12 @@
 
     <!-- Step 1 › Live Heatmaps (screen01.png) -->
     <div class="step-row reveal">
-        <div class="step-image" data-tooltip="Interactive practice view showing the QWERTY layout heatmap with blue highlights for fast keys and red for errors">
+        <div class="step-image" style="cursor: help;">
             <div class="window">
                 <img src="screen01.png" alt="Interactive practice view showing the QWERTY layout heatmap with blue highlights for fast keys and red for errors">
             </div>
         </div>
+        <div class="step-tooltip">Interactive practice view showing the QWERTY layout heatmap with blue highlights for fast keys and red for errors</div>
         <div class="step-text">
             <span class="step-label">Step 1</span>
             <h2>See Your Performance in Real-Time</h2>
@@ -333,11 +331,12 @@
 
     <!-- Step 2 › Local AI Insights (contextInsights.png) -->
     <div class="step-row reverse reveal">
-        <div class="step-image" data-tooltip="Expanded sidebar showcasing local LLM explaining a typed Rust fn main() function. The LLM provides real-time code explanations without leaving the typing flow.">
+        <div class="step-image" style="cursor: help;">
             <div class="window">
                 <img src="contextInsights.png" alt="Expanded sidebar showcasing local LLM explaining a typed Rust fn main() function">
             </div>
         </div>
+        <div class="step-tooltip">Expanded sidebar showcasing local LLM explaining a typed Rust fn main() function. The LLM provides real-time code explanations without leaving the typing flow.</div>
         <div class="step-text">
             <span class="step-label">Step 2</span>
             <h2>Acquire Deep Contextual AI Insights</h2>
@@ -352,11 +351,12 @@
 
     <!-- Step 3 › Custom Lessons (customLessons.png) -->
     <div class="step-row reveal">
-        <div class="step-image" data-tooltip="Import menu showing files import, paste option, and generate tailored lessons from performance metrics">
+        <div class="step-image" style="cursor: help;">
             <div class="window">
                 <img src="customLessons.png" alt="Import menu showing files import, paste option, and generate tailored lessons from performance metrics">
             </div>
         </div>
+        <div class="step-tooltip">Import menu showing files import, paste option, and generate tailored lessons from performance metrics</div>
         <div class="step-text">
             <span class="step-label">Step 3</span>
             <h2>Import or Generate Tailor-Made Lessons</h2>
@@ -371,11 +371,12 @@
 
     <!-- Step 4 › Track Progress (screen02.png) -->
     <div class="step-row reverse reveal">
-        <div class="step-image" data-tooltip="Rich analytics view displaying monthly calendar heatmap, daily speeds progression chart, and automated coaching recommendations">
+        <div class="step-image" style="cursor: help;">
             <div class="window">
                 <img src="screen02.png" alt="Rich analytics view displaying monthly calendar heatmap, daily speeds progression chart, and automated coaching recommendations">
             </div>
         </div>
+        <div class="step-tooltip">Rich analytics view displaying monthly calendar heatmap, daily speeds progression chart, and automated coaching recommendations</div>
         <div class="step-text">
             <span class="step-label">Step 4</span>
             <h2>Analyze Your Improvement Over Time</h2>
@@ -390,11 +391,12 @@
 
     <!-- Step 5 › Customize Ergonomics (screen03.png) -->
     <div class="step-row reveal">
-        <div class="step-image" data-tooltip="Settings options demonstrating theme selections, OS profiles, hand calibrations, and typing preference toggles">
+        <div class="step-image" style="cursor: help;">
             <div class="window">
                 <img src="screen03.png" alt="Settings options demonstrating theme selections, OS profiles, hand calibrations, and typing preference toggles">
             </div>
         </div>
+        <div class="step-tooltip">Settings options demonstrating theme selections, OS profiles, hand calibrations, and typing preference toggles</div>
         <div class="step-text">
             <span class="step-label">Step 5</span>
             <h2>Tailor Ergonomics and Interface Styling</h2>
@@ -409,11 +411,12 @@
 
     <!-- Step 6 › LLM Configuration & Lockout (screen04.png) -->
     <div class="step-row reverse reveal">
-        <div class="step-image" data-tooltip="Local LLM API connection settings, custom replacement table JSON, and voluntary practice lockouts dropdown">
+        <div class="step-image" style="cursor: help;">
             <div class="window">
                 <img src="screen04.png" alt="Local LLM API connection settings, custom replacement table JSON, and voluntary practice lockouts dropdown">
             </div>
         </div>
+        <div class="step-tooltip">Local LLM API connection settings, custom replacement table JSON, and voluntary practice lockouts dropdown</div>
         <div class="step-text">
             <span class="step-label">Step 6</span>
             <h2>Lock In Your Habits Securely</h2>
