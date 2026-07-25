@@ -3,29 +3,27 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>LLM Typing Trainer — Private, Adaptive Touch-Typing for Developers</title>
+    <title>LLM Typing Trainer — Master Touch-Typing</title>
     <style>
         *, *::before, *::after { margin: 0; padding: 0; box-sizing: border-box; }
 
         :root {
-            --bg: #090d16;
-            --surface: #111a2e;
-            --surface-hover: #17243f;
-            --border: #223454;
-            --border-glow: #385585;
-            --text: #f1f5f9;
-            --muted: #94a3b8;
+            --bg: #0e1523;
+            --surface: #161f32;
+            --surface-2: #1d2840;
+            --border: #253048;
+            --text: #e5eaf4;
+            --muted: #8a96ae;
             --accent: #5b9bd5;
             --accent-bright: #7db5e8;
-            --accent-green: #4ade80;
             --radius: 14px;
-            --font-stack: -apple-system, BlinkMacSystemFont, 'Inter', 'Segoe UI', Roboto, sans-serif;
+            --radius-sm: 10px;
         }
 
         html { scroll-behavior: smooth; }
 
         body {
-            font: 16px / 1.65 var(--font-stack);
+            font: 16px / 1.65 -apple-system, BlinkMacSystemFont, 'Inter', 'Segoe UI', Roboto, sans-serif;
             background: var(--bg);
             color: var(--text);
             overflow-x: hidden;
@@ -34,235 +32,155 @@
         /* ── NAV ─────────────────────────────── */
         nav {
             position: sticky; top: 0; z-index: 100;
-            background: rgba(9, 13, 22, 0.85);
-            backdrop-filter: blur(20px);
+            background: rgba(14, 21, 35, 0.82);
+            backdrop-filter: blur(16px);
             border-bottom: 1px solid var(--border);
             padding: 0 max(2rem, clamp(1rem, 4vw, 3rem));
         }
         .nav-inner {
             max-width: 1120px; margin: 0 auto;
             display: flex; align-items: center; justify-content: space-between;
-            height: 64px; font-size: 14px;
+            height: 56px; font-size: 13px;
         }
-        .nav-brand { display: flex; align-items: center; gap: 12px; text-decoration: none; color: var(--text); font-weight: 700; }
+        .nav-brand { display: flex; align-items: center; gap: 10px; text-decoration: none; color: var(--text); font-weight: 700; }
         .nav-brand-icon {
             width: 32px; height: 32px;
             background: linear-gradient(145deg, #ccc, #787878);
             border-radius: 8px; display: grid; place-items: center;
             font-weight: 900; font-size: 16px; color: #3a3a3a;
         }
-        .nav-links { display: flex; gap: 2.5rem; list-style: none; align-items: center; }
+        .nav-links { display: flex; gap: 2.5rem; list-style: none; }
         .nav-links a { color: var(--muted); text-decoration: none; font-weight: 500; transition: color .2s; }
         .nav-links a:hover { color: var(--text); }
         .nav-install {
             background: var(--accent); color: #fff !important;
-            padding: 8px 20px; border-radius: 8px; font-weight: 600 !important;
+            padding: 6px 18px; border-radius: 8px; font-weight: 600 !important;
             text-decoration: none; transition: transform .15s, box-shadow .15s;
         }
-        .nav-install:hover { transform: translateY(-1px); box-shadow: 0 4px 16px rgba(91,155,213,.35); }
-        .nav-hamburger { display: none; background: none; border: none; color: var(--text); font-size: 24px; cursor: pointer; }
+        .nav-install:hover { transform: translateY(-1px); box-shadow: 0 4px 16px rgba(91,155,213,.3); }
+        .nav-hamburger { display: none; background: none; border: none; color: var(--text); font-size: 22px; cursor: pointer; }
 
         /* ── HERO ────────────────────────────── */
         .hero {
             padding: 4rem 2rem 2rem; text-align: center;
             max-width: 1120px; margin: 0 auto;
-            position: relative;
         }
-        .hero::before {
-            content: ''; position: absolute; top: -100px; left: 50%; transform: translateX(-50%);
-            width: 600px; height: 600px;
-            background: radial-gradient(circle, rgba(91,155,213,0.08) 0%, transparent 70%);
-            pointer-events: none;
-        }
-        .hero-badge {
-            display: inline-flex; align-items: center; gap: 8px;
-            background: var(--surface); border: 1px solid var(--border);
-            padding: 6px 16px; border-radius: 100px; font-size: 13px;
-            color: var(--muted); margin-bottom: 2rem;
-        }
-        .hero-badge span { color: var(--accent-bright); font-weight: 600; }
         .hero-icon {
             width: 72px; height: 72px; margin: 0 auto 1.5rem;
             border-radius: 18px;
             box-shadow: 0 4px 24px rgba(0,0,0,.35);
         }
-        .hero h1 { font-size: clamp(2.2rem, 5vw, 3.6rem); font-weight: 800; letter-spacing: -0.03em; line-height: 1.15; margin-bottom: 1.25rem; }
+        .hero h1 { font-size: clamp(2rem, 4.5vw, 3.2rem); font-weight: 800; letter-spacing: -0.03em; line-height: 1.12; margin-bottom: 1rem; }
         .hero h1 em { font-style: normal; background: linear-gradient(135deg, var(--accent), var(--accent-bright)); -webkit-background-clip: text; -webkit-text-fill-color: transparent; }
-        .hero-sub { font-size: 1.2rem; color: var(--muted); max-width: 680px; margin: 0 auto 2.5rem; line-height: 1.7; }
+        .hero-sub { font-size: 1.1rem; color: var(--muted); max-width: 560px; margin: 0 auto 2rem; }
         .hero-cta {
             display: inline-flex; align-items: center; gap: 10px;
-            background: var(--accent); color: #fff; padding: 14px 32px;
-            border-radius: 10px; font-size: 16px; font-weight: 600;
+            background: var(--accent); color: #fff; padding: 12px 28px;
+            border-radius: 10px; font-size: 15px; font-weight: 600;
             text-decoration: none; transition: transform .2s, box-shadow .2s;
-            box-shadow: 0 4px 20px rgba(91,155,213,.2);
         }
-        .hero-cta:hover { transform: translateY(-2px); box-shadow: 0 8px 28px rgba(91,155,213,.35); }
+        .hero-cta:hover { transform: translateY(-2px); box-shadow: 0 8px 28px rgba(91,155,213,.25); }
 
-        /* hero screenshot — framed as browser window */
-        .hero-screenshot { margin: 4rem auto 0; max-width: 920px; position: relative; }
-        .hero-screenshot::after {
-            content: ''; position: absolute; inset: -1px; border-radius: 11px;
-            background: linear-gradient(180deg, var(--border-glow), transparent);
-            z-index: -1; pointer-events: none;
-        }
+        /* screenshot browser window frame */
+        .hero-screenshot { margin: 2.5rem auto 0; max-width: 860px; }
         .window {
             background: var(--surface); border: 1px solid var(--border);
             border-radius: 10px; overflow: hidden;
-            box-shadow: 0 24px 64px rgba(0,0,0,.6);
+            box-shadow: 0 24px 64px rgba(0,0,0,.45);
         }
+        .window-bar {
+            display: flex; align-items: center; gap: 7px;
+            padding: 10px 14px; border-bottom: 1px solid var(--border);
+        }
+        .dot { width: 11px; height: 11px; border-radius: 50%; background: #ff5f57; }
+        .dot:nth-child(2) { background: #febc2e; }
+        .dot:nth-child(3) { background: #28c840; }
+        .window-bar span { flex: 1; text-align: center; font-size: 12px; color: var(--muted); }
         .window img { width: 100%; height: auto; display: block; }
 
         /* ── HOW IT WORKS (screenshots) ─────── */
-        .walkthrough { max-width: 1120px; margin: 0 auto; padding: 6rem 2rem; }
+        .walkthrough { max-width: 1120px; margin: 0 auto; padding: 5rem 2rem; }
         .walkthrough > .section-label {
-            display: block; text-align: center; margin-bottom: 4rem;
-            font-size: 14px; font-weight: 600; color: var(--accent); text-transform: uppercase; letter-spacing: 2px;
+            display: block; text-align: center; margin-bottom: 3rem;
+            font-size: 13px; font-weight: 600; color: var(--accent); text-transform: uppercase; letter-spacing: 2px;
         }
 
-        .step-row { display: grid; grid-template-columns: 1.1fr 0.9fr; gap: 4rem; align-items: center; margin-bottom: 6rem; }
+        .step-row { display: grid; grid-template-columns: 1fr 1fr; gap: 3rem; align-items: center; margin-bottom: 5rem; }
         .step-row:last-child { margin-bottom: 0; }
-        .step-row.reverse { grid-template-columns: 0.9fr 1.1fr; }
+        .step-row.reverse { direction: rtl; }
+        .step-row.reverse > * { direction: ltr; }
 
-        .step-text { padding: 1rem 0; }
         .step-text .step-label {
-            display: inline-flex; align-items: center; gap: 6px; font-size: 12.5px; font-weight: 700;
-            color: var(--accent-bright); border: 1px solid var(--border);
-            background: rgba(91,155,213,0.06);
-            padding: 4px 14px; border-radius: 100px; margin-bottom: 1.25rem;
+            display: inline-block; font-size: 12.5px; font-weight: 700;
+            color: var(--accent); border: 1px solid var(--border);
+            padding: 3px 12px; border-radius: 100px; margin-bottom: 1rem;
         }
-        .step-text h2 { font-size: clamp(1.4rem, 2.5vw, 2.1rem); font-weight: 800; letter-spacing: -0.02em; margin-bottom: 1rem; line-height: 1.25; }
-        .step-text p { color: var(--muted); font-size: 1.05rem; line-height: 1.7; margin-bottom: 1.5rem; }
+        .step-text h2 { font-size: clamp(1.35rem, 2.5vw, 1.85rem); font-weight: 800; letter-spacing: -0.02em; margin-bottom: .75rem; }
+        .step-text p { color: var(--muted); font-size: 1rem; max-width: 420px; }
 
-        .bullets { list-style: none; display: flex; flex-direction: column; gap: 0.75rem; }
-        .bullets li { display: flex; align-items: flex-start; gap: 10px; font-size: 0.95rem; color: var(--text); }
-        .bullets li::before { content: "✦"; color: var(--accent-bright); font-weight: bold; }
-
-.step-row { position: relative; }
-        .step-image {
-            border-radius: var(--radius); background: var(--surface);
-            box-shadow: 0 20px 48px rgba(0,0,0,.5); border: 1px solid var(--border);
-            transition: border-color 0.3s ease, transform 0.3s ease;
-            position: relative; overflow: visible;
-            width: 100%; max-width: 640px;
+        .step-image { border-radius: var(--radius); overflow: hidden; background: var(--surface);
+            box-shadow: 0 16px 48px rgba(0,0,0,.35); }
+.step-image img { width: 100%; height: auto; display: block; cursor: zoom-in; }
+        .step-image img.dim { opacity: 0.3; transition: opacity .3s ease; }
+        .img-overlay {
+            position: fixed; z-index: 2147483647; left: 50%; top: 50%;
+            transform: translate(-50%, -50%) scale(0.8);
+            width: 1280px; height: 800px; max-width: none; max-height: none;
+            border-radius: 8px; box-shadow: 0 0 0 9999px rgba(0,0,0,.85);
+            opacity: 0; transition: all .3s cubic-bezier(.25,.1,.25,1);
+            pointer-events: none;
         }
-        .step-image:hover { border-color: var(--border-glow); transform: scale(2) translateZ(0); }
-        .step-image img { width: 100%; height: auto; display: block; }
+        .img-overlay.visible { opacity: 1; transform: translate(-50%, -50%) scale(1); }
+        .img-overlay img { width: 100%; height: 100%; display: block; border-radius: inherit; }
 
-        /* Tooltip — sibling of .step-image, not a child, so it doesn't inherit scale(2) */
-        .step-tooltip {
-            position: absolute; z-index: 99999;
-            top: calc(100% + 12px); left: 50%; transform: translate(-50%, 0);
-            width: 640px; max-width: 640px;
-            padding: 10px 16px; border-radius: 8px;
-            background: var(--surface-hover); border: 1px solid var(--border-glow);
-            color: var(--text); font-size: 12px; line-height: 1.6;
-            white-space: normal; word-break: break-word;
-            opacity: 0; pointer-events: none;
-            transition: opacity 0.2s ease, font-size 0.3s ease;
-            box-shadow: 0 8px 24px rgba(0,0,0,.5);
-            text-align: center;
-        }
-        .step-tooltip::before {
-            content: ''; position: absolute; z-index: 99999;
-            top: calc(0% - 8px); left: 50%; transform: translate(-50%, 0);
-            border: 6px solid transparent; border-bottom-color: var(--surface-hover);
-            opacity: inherit;
-        }
-        .step-image:hover + .step-tooltip { opacity: 1; font-size: 24px; }
-
-        /* Hero screenshot tooltip wrapper */
-        .window-wrapper { position: relative; display: inline-block; }
-        .window-tooltip {
-            position: absolute; z-index: 99999;
-            top: calc(100% + 12px); left: 50%; transform: translate(-50%, 0);
-            width: 640px; max-width: 640px;
-            padding: 10px 16px; border-radius: 8px;
-            background: var(--surface-hover); border: 1px solid var(--border-glow);
-            color: var(--text); font-size: 12px; line-height: 1.6;
-            white-space: normal; word-break: break-word;
-            opacity: 0; pointer-events: none;
-            transition: opacity 0.2s ease;
-            box-shadow: 0 8px 24px rgba(0,0,0,.5);
-            text-align: center;
-        }
-        .window-tooltip::before {
-            content: ''; position: absolute; z-index: 99999;
-            top: calc(0% - 8px); left: 50%; transform: translate(-50%, 0);
-            border: 6px solid transparent; border-bottom-color: var(--surface-hover);
-        }
-        .window-wrapper:hover + .window-tooltip { opacity: 1; }
-
-        /* Dim everything else when a screenshot is hovered */
-        .walkthrough:has(.step-image:hover) .step-row:not(:hover),
-        .walkthrough:has(.window-wrapper:hover) ~ * { opacity: 0.05; }
-        .step-image:hover,
-        .window-wrapper:hover { position: relative; z-index: 99998; }
-
-        /* ── FEATURES ───────────────────────── */
+        /* ── FEATURES (compact row of cards) ─ */
         .features {
-            max-width: 1120px; margin: 0 auto; padding: 5rem 2rem;
-            display: grid; grid-template-columns: repeat(auto-fit, minmax(260px, 1fr)); gap: 1.5rem;
+            max-width: 1120px; margin: 0 auto; padding: 4rem 2rem;
         }
-        .features-head {
-            grid-column: 1 / -1; text-align: center; margin-bottom: 3rem;
-        }
-        .features-head h2 { font-size: clamp(1.8rem, 3.5vw, 2.6rem); font-weight: 800; letter-spacing: -0.02em; margin-bottom: 0.75rem; }
-        .features-head p { color: var(--muted); font-size: 1.1rem; max-width: 600px; margin: 0 auto; }
+        .features-head { text-align: center; margin-bottom: 3rem; }
+        .features-head h2 { font-size: clamp(1.5rem, 3vw, 2.2rem); font-weight: 800; letter-spacing: -0.02em; margin-bottom: .5rem; }
+        .features-head p { color: var(--muted); font-size: 1rem; max-width: 520px; margin: 0 auto; }
 
         .fcard {
             background: var(--surface); border: 1px solid var(--border);
-            border-radius: var(--radius); padding: 2rem; text-align: left;
-            transition: border-color .25s, transform .25s, box-shadow .25s;
+            border-radius: var(--radius); padding: 1.75rem; text-align: center;
+            transition: border-color .25s, transform .25s;
         }
-        .fcard:hover { border-color: var(--accent); transform: translateY(-4px); box-shadow: 0 12px 30px rgba(0,0,0,.4); }
-        .ficon { font-size: 2.2rem; margin-bottom: 1.25rem; display: block; }
-        .fcard h3 { font-size: 1.1rem; font-weight: 700; margin-bottom: 0.5rem; color: #fff; }
-        .fcard p { font-size: 0.95rem; color: var(--muted); line-height: 1.6; }
+        .fcard:hover { border-color: var(--accent); transform: translateY(-3px); }
+        .ficon { font-size: 2rem; margin-bottom: .75rem; display: block; }
+        .fcard h3 { font-size: 0.95rem; font-weight: 700; margin-bottom: .4rem; }
+        .fcard p { font-size: 0.85rem; color: var(--muted); line-height: 1.55; }
 
         /* ── PRIVACY ─────────────────────────── */
         .privacy {
-            max-width: 800px; margin: 0 auto; padding: 6rem 2rem;
-            text-align: center;
+            max-width: 720px; margin: 0 auto; padding: 4rem 2rem 5rem;
         }
-        .privacy h2 { font-size: clamp(1.8rem, 3.5vw, 2.6rem); font-weight: 800; letter-spacing: -0.02em; margin-bottom: 1.25rem; }
-        .privacy p { color: var(--muted); margin-bottom: 2rem; line-height: 1.7; font-size: 1.1rem; max-width: 640px; margin-left: auto; margin-right: auto; }
-
-        .priv-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 1.5rem; text-align: left; margin-bottom: 2.5rem; }
-        .priv-item { display: flex; gap: 12px; background: rgba(22,31,50,0.3); border: 1px solid var(--border); padding: 1.25rem; border-radius: 10px; }
-        .priv-item-icon { font-size: 1.25rem; }
-        .priv-item-text strong { display: block; color: var(--text); font-size: 0.95rem; margin-bottom: 0.25rem; }
-        .priv-item-text span { color: var(--muted); font-size: 0.85rem; line-height: 1.5; }
-
-        .priv-toggle { background: var(--surface); border: 1px solid var(--border); color: var(--text); padding: 10px 24px; border-radius: 8px; cursor: pointer; font-size: 14px;
-            font-weight: 600; transition: border-color .2s, background .2s; }
-        .priv-toggle:hover { border-color: var(--accent-bright); background: var(--surface-hover); }
-        .priv-details { display: none; margin-top: 2rem; padding: 1.5rem;
-            background: var(--surface); border: 1px solid var(--border); border-radius: 10px; text-align: left; overflow-x: auto; }
+        .privacy h2 { font-size: clamp(1.5rem, 3vw, 2.2rem); font-weight: 800; letter-spacing: -0.02em; margin-bottom: 1rem; text-align: center; }
+        .privacy p { color: var(--muted); margin-bottom: 1.25rem; line-height: 1.7; }
+        .privacy ul { padding-left: 1.25rem; margin-bottom: 1.5rem; }
+        .privacy li { color: var(--muted); margin-bottom: .5rem; }
+        .priv-toggle { background: none; border: none; color: var(--accent-bright); cursor: pointer; font-size: 13.5px;
+            text-decoration: underline; transition: opacity .2s; }
+        .priv-toggle:hover { opacity: .8; }
+        .priv-details { display: none; margin-top: 1.5rem; padding: 1.25rem 1.5rem;
+            background: var(--surface); border: 1px solid var(--border); border-radius: 10px; }
         .priv-details.open { display: block; }
 
         /* ── FOOTER LINE ─────────────────────── */
-        .foot { text-align: center; padding: 3rem 2rem; color: var(--muted); font-size: 14px; border-top: 1px solid var(--border); background: #060910; }
-        .foot-links { display: flex; justify-content: center; gap: 2rem; margin-bottom: 1rem; list-style: none; }
-        .foot-links a { color: var(--accent-bright); text-decoration: none; transition: opacity 0.15s; }
-        .foot-links a:hover { opacity: 0.8; }
+        .foot { text-align: center; padding: 2rem; color: var(--muted); font-size: 13px; border-top: 1px solid var(--border); }
+        .foot a { color: var(--accent-bright); text-decoration: none; }
 
         /* ── MOBILE NAV ──────────────────────── */
-        @media (max-width: 900px) {
-            .step-row, .step-row.reverse { grid-template-columns: 1fr; gap: 2rem; }
-            .step-row.reverse .step-text { order: -1; }
-            .step-tooltip, .window-tooltip { width: 100%; max-width: 640px; font-size: 12px; }
-        }
         @media (max-width: 768px) {
-            .nav-links { display: none; flex-direction: column; position: absolute; top: 64px; left: 0; right: 0; background: var(--bg); border-bottom: 1px solid var(--border); padding: 1.5rem; gap: 1.5rem; z-index: 101; }
-            .nav-links.active { display: flex; }
+            .nav-links { display: none; }
             .nav-hamburger { display: block; }
-            .hero { padding: 4rem 1.25rem .5rem; }
+            .step-row, .step-row.reverse { grid-template-columns: 1fr; direction: ltr; gap: 1.5rem; }
+            .hero { padding: 2.5rem 1.25rem .5rem; }
             section, .walkthrough { padding-left: 1.25rem; padding-right: 1.25rem; }
-            .priv-grid { grid-template-columns: 1fr; }
         }
 
         /* ── FADE-IN ANIMATION ───────────────── */
-        .reveal { opacity: 0; transform: translateY(20px); transition: opacity .6s cubic-bezier(0.16, 1, 0.3, 1), transform .6s cubic-bezier(0.16, 1, 0.3, 1); }
+        .reveal { opacity: 0; transform: translateY(18px); transition: opacity .6s ease, transform .6s ease; }
         .reveal.visible { opacity: 1; transform: translateY(0); }
     </style>
 </head>
@@ -288,216 +206,131 @@
 <!-- HERO -->
 <section class="hero">
     <img src="icon.png" alt="LLM Typing Trainer extension icon — a stylised keyboard" class="hero-icon">
-    <h1>Touch Typing Built for Developers,<br>Powered by <em>Offline AI</em></h1>
-    <p class="hero-sub">The privacy-first Chrome Extension that analyzes your physical typing patterns and integrates local language models (Ollama, LM Studio) to adapt to your skills in real-time.</p>
+    <h1>Touch Typing That <em>Adapts to You</em></h1>
+    <p class="hero-sub">Real-time heatmaps, local LLM insights, and offline practice scheduling — built for developers who want faster, more accurate coding speed.</p>
     <a href="https://chrome.google.com/webstore/detail/adaptive-typing-trainer" class="hero-cta" role="button">
-        <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"/><polyline points="7 10 12 15 17 10"/><line x1="12" y1="15" x2="12" y2="3"/></svg>
-        Add to Chrome — It's Free &amp; Offline-First
+        <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"/><polyline points="7 10 12 15 17 10"/><line x1="12" y1="15" x2="12" y2="3"/></svg>
+        Add to Chrome — Free
     </a>
 
     <div class="hero-screenshot reveal">
-        <div class="window-wrapper" style="cursor: help;">
-            <div class="window">
-                <img src="screen01.png" alt="Main typing interface showing code block being typed and a highly responsive, color-coded keyboard heatmap below">
-            </div>
+        <div class="window">
+            <img src="screen01.png" alt="Main typing interface showing a Rust code lesson with a colour-coded keyboard heatmap below. Live stats show 0 CPM, 100% ACC, 0 ERR. The cursor is on the 'f' in 'fn main()'.">
         </div>
-        <div class="window-tooltip">Main typing interface showing code block being typed and a highly responsive, color-coded keyboard heatmap below</div>
     </div>
 </section>
 
 <!-- HOW IT WORKS — SCREENSHOT WALKTHROUGH -->
 <section id="walkthrough" class="walkthrough">
-    <span class="section-label">A Seamless, Personalized Journey</span>
+    <span class="section-label">How It Works</span>
 
-    <!-- Step 1 › Live Heatmaps (screen01.png) -->
+    <!-- 1 › choose lesson & start typing -->
     <div class="step-row reveal">
-        <div class="step-image" style="cursor: help;">
-            <div class="window">
-                <img src="screen01.png" alt="Interactive practice view showing the QWERTY layout heatmap with blue highlights for fast keys and red for errors">
-            </div>
+        <div class="step-image">
+            <img src="screen01.png" alt="Typing interface showing a Rust code lesson with live keyboard heatmap and contextual LLM insights panel on the right">
         </div>
-        <div class="step-tooltip">Interactive practice view showing the QWERTY layout heatmap with blue highlights for fast keys and red for errors</div>
         <div class="step-text">
             <span class="step-label">Step 1</span>
-            <h2>See Your Performance in Real-Time</h2>
-            <p>Every keystroke counts. Our integrated physical keyboard heatmap visualizes your typing speeds and error patterns directly as you type.</p>
-            <ul class="bullets">
-                <li><strong>Dynamic Overlays:</strong> Color-coded keys highlight your active strengths and trouble zones.</li>
-                <li><strong>Ergonomic Guidance:</strong> Receive real-time prompts detailing next keys and exact finger positions.</li>
-                <li><strong>Immediate Response:</strong> Track live stats like CPM, Accuracy, Errors, and Elapsed time on the fly.</li>
-            </ul>
+            <h2>Pick a Lesson and Start Typing</h2>
+            <p>Select from preloaded Rust, HTML, CSS or JavaScript lessons, import your own text files, or let the adaptive engine generate a lesson from your trouble keys. The on-screen keyboard lights up with real-time heatmaps as you type.</p>
         </div>
     </div>
 
-    <!-- Step 2 › Local AI Insights (contextInsights.png) -->
+    <!-- 2 › context insights panel -->
     <div class="step-row reverse reveal">
-        <div class="step-image" style="cursor: help;">
-            <div class="window">
-                <img src="contextInsights.png" alt="Expanded sidebar showcasing local LLM explaining a typed Rust fn main() function">
-            </div>
+        <div class="step-image">
+            <img src="contextInsights.png" alt="Same typing interface with an expanded Context Insights panel showing an LLM-generated explanation of the Rust code being typed">
         </div>
-        <div class="step-tooltip">Expanded sidebar showcasing local LLM explaining a typed Rust fn main() function. The LLM provides real-time code explanations without leaving the typing flow.</div>
         <div class="step-text">
             <span class="step-label">Step 2</span>
-            <h2>Acquire Deep Contextual AI Insights</h2>
-            <p>Don't just memorize the keys—understand the source code you are practicing. Our Context Insights panel streams explanations directly inside the editor.</p>
-            <ul class="bullets">
-                <li><strong>Local Execution:</strong> Queries are sent entirely to your machine via local engines like Ollama.</li>
-                <li><strong>Tailored Perspectives:</strong> Configure the LLM to explain concepts as a Python Expert, CS Tutor, or more.</li>
-                <li><strong>Zero Latency:</strong> Immediate, line-by-line updates as you finish active typing segments.</li>
-            </ul>
+            <h2>Get Contextual AI Explanations</h2>
+            <p>As you type, a local LLM provides real-time explanations of the code or text you're practicing. The Context Insights panel shows what each line means, why it matters, and how to improve — all without leaving the typing flow.</p>
         </div>
     </div>
 
-    <!-- Step 3 › Custom Lessons (customLessons.png) -->
+    <!-- 3 › custom lessons & import/export -->
     <div class="step-row reveal">
-        <div class="step-image" style="cursor: help;">
-            <div class="window">
-                <img src="customLessons.png" alt="Import menu showing files import, paste option, and generate tailored lessons from performance metrics">
-            </div>
+        <div class="step-image">
+            <img src="customLessons.png" alt="Typing interface with an open import/export dropdown menu showing options to import from file or generate lessons from performance stats">
         </div>
-        <div class="step-tooltip">Import menu showing files import, paste option, and generate tailored lessons from performance metrics</div>
         <div class="step-text">
             <span class="step-label">Step 3</span>
-            <h2>Import or Generate Tailor-Made Lessons</h2>
-            <p>Breathe new life into your practice routine. Load custom content manually or let our performance algorithm generate a custom lesson targeted at your weak spots.</p>
-            <ul class="bullets">
-                <li><strong>Flexible Inputs:</strong> Drag-and-drop code/prose files, or paste raw text instantly.</li>
-                <li><strong>Smart Generation:</strong> Auto-synthesize unique practice blocks utilizing your top trouble keys.</li>
-                <li><strong>Difficulty Scaling:</strong> Calibrate word-length goals to adjust training durations dynamically.</li>
-            </ul>
+            <h2>Import or Auto-Generate Lessons</h2>
+            <p>Paste any code or prose to create a custom lesson instantly. Or let the adaptive engine analyse your typing history and automatically generate lessons targeted at your weakest keys and slowest sequences.</p>
         </div>
     </div>
 
-    <!-- Step 4 › Track Progress (screen02.png) -->
+    <!-- 4 › track progress -->
     <div class="step-row reverse reveal">
-        <div class="step-image" style="cursor: help;">
-            <div class="window">
-                <img src="screen02.png" alt="Rich analytics view displaying monthly calendar heatmap, daily speeds progression chart, and automated coaching recommendations">
-            </div>
+        <div class="step-image">
+            <img src="screen02.png" alt="Progress dashboard showing a July 2026 calendar heatmap, WPM and accuracy trend charts, and AI-powered coach diagnostics">
         </div>
-        <div class="step-tooltip">Rich analytics view displaying monthly calendar heatmap, daily speeds progression chart, and automated coaching recommendations</div>
         <div class="step-text">
             <span class="step-label">Step 4</span>
-            <h2>Analyze Your Improvement Over Time</h2>
-            <p>Consistency is key to permanent muscle memory. The interactive dashboard translates your historical sessions into actionable, visual feedback.</p>
-            <ul class="bullets">
-                <li><strong>Calendar Heatmaps:</strong> Track practice streaks and frequency using our GitHub-style grid.</li>
-                <li><strong>Multi-Metric Charting:</strong> Cross-reference WPM, sustained CPM, and accuracy over successive days.</li>
-                <li><strong>Automated Coach:</strong> Local AI metrics pinpoint your exact trend lines and offer encouraging tips.</li>
-            </ul>
+            <h2>Track Progress and Set Goals</h2>
+            <p>A monthly calendar heatmap, WPM progression charts, and sortable session history turn every practice session into measurable improvement. AI-powered coach diagnostics give you personalised feedback on speed, accuracy, and sustained performance.</p>
         </div>
     </div>
 
-    <!-- Step 5 › Customize Ergonomics (screen03.png) -->
+    <!-- 5 › settings & local LLM -->
     <div class="step-row reveal">
-        <div class="step-image" style="cursor: help;">
-            <div class="window">
-                <img src="screen03.png" alt="Settings options demonstrating theme selections, OS profiles, hand calibrations, and typing preference toggles">
-            </div>
+        <div class="step-image">
+            <img src="screen04.png" alt="Settings page with local LLM endpoint configuration, custom character replacement table, and practice lockout controls">
         </div>
-        <div class="step-tooltip">Settings options demonstrating theme selections, OS profiles, hand calibrations, and typing preference toggles</div>
         <div class="step-text">
             <span class="step-label">Step 5</span>
-            <h2>Tailor Ergonomics and Interface Styling</h2>
-            <p>Every hand shape, keyboard layout, and visual aesthetic preference is accounted for. Calibrate the trainer to blend seamlessly into your daily environment.</p>
-            <ul class="bullets">
-                <li><strong>Hand Size Calibration:</strong> Warns when complex key combos cause high-reach physical strain.</li>
-                <li><strong>Alternative Layouts:</strong> Full support for standard QWERTY, Dvorak, Colemak, and hardware form factors.</li>
-                <li><strong>Typing Behaviors:</strong> Fine-tune behaviors like Stop Cursor on Error, Word Wrap, and Whitespace styling.</li>
-            </ul>
-        </div>
-    </div>
-
-    <!-- Step 6 › LLM Configuration & Lockout (screen04.png) -->
-    <div class="step-row reverse reveal">
-        <div class="step-image" style="cursor: help;">
-            <div class="window">
-                <img src="screen04.png" alt="Local LLM API connection settings, custom replacement table JSON, and voluntary practice lockouts dropdown">
-            </div>
-        </div>
-        <div class="step-tooltip">Local LLM API connection settings, custom replacement table JSON, and voluntary practice lockouts dropdown</div>
-        <div class="step-text">
-            <span class="step-label">Step 6</span>
-            <h2>Lock In Your Habits Securely</h2>
-            <p>Enforce physical health boundaries and control where your AI data travels. LLM connection setups and voluntary locking are fully configurable.</p>
-            <ul class="bullets">
-                <li><strong>Private local URL:</strong> Configure connection URLs, credentials, and select local models easily.</li>
-                <li><strong>Custom Mappings:</strong> Create custom JSON mappings to substitute complex symbols with simple letters.</li>
-                <li><strong>Prevent Over-strain:</strong> Set a voluntary lockout (e.g., 5 to 60 min) to ensure deep rests between training.</li>
-            </ul>
+            <h2>Configure Everything Locally</h2>
+            <p>Connect Ollama, LM Studio or any OpenAI-compatible local server for AI insights. Fine-tune themes, keyboard layouts, cursor styles, and character mappings — all stored on your device with no cloud dependency.</p>
         </div>
     </div>
 </section>
 
-<!-- FEATURES GRID -->
+<!-- FEATURES (compact row) -->
 <section id="features" class="features">
     <div class="features-head reveal">
-        <h2>Uncompromised Capabilities</h2>
-        <p>Built intentionally for developers seeking zero compromises on privacy, functionality, and performance.</p>
+        <h2>Everything You Need, Nothing You Don't</h2>
+        <p>A focused tool for serious typing practice.</p>
     </div>
 
-    <div class="fcard reveal"><span class="ficon">⌨️</span><h3>Adaptive Physical Heatmap</h3><p>Instantly overlay key-by-key speeds and errors directly onto your exact keyboard hardware configuration.</p></div>
-    <div class="fcard reveal"><span class="ficon">🤖</span><h3>100% Offline AI Coaching</h3><p>Leverage local endpoints like Ollama or LM Studio. Explains complex coding lines with zero external cloud calls.</p></div>
-    <div class="fcard reveal"><span class="ficon">📊</span><h3>Advanced Analytics</h3><p>Interactive speed, accuracy, and latency charts alongside full session history tables on demand.</p></div>
-    <div class="fcard reveal"><span class="ficon">🔤</span><h3>Unicode Mappings</h3><p>Easily swap difficult, high-strain symbols (like « æ » or « € ») with custom, easy-to-type ASCII alternatives.</p></div>
-    <div class="fcard reveal"><span class="ficon">🎨</span><h3>Dual High-Contrast Themes</h3><p>Toggle between gorgeous, developer-friendly Atom One Dark and Atom One Light configurations.</p></div>
-    <div class="fcard reveal"><span class="ficon">📁</span><h3>Personalized Material</h3><p>Practice any text, codebases, or prose by simply dropping files into the dynamic dashboard.</p></div>
-    <div class="fcard reveal"><span class="ficon">🔒</span><h3>Voluntary Rest Lockout</h3><p>Enforce healthy spacing routines. Lock typing activities for fixed periods to let muscle memory solidify.</p></div>
-    <div class="fcard reveal"><span class="ficon">💾</span><h3>Seamless JSON Transfers</h3><p>Easily backup or migrate your entire progress record, custom materials, and presets in one click.</p></div>
+    <div class="fcard reveal"><span class="ficon">⌨️</span><h3>Live Keyboard Heatmaps</h3><p>Speed and error overlays on a real keyboard layout — QWERTY, Dvorak or Colemak.</p></div>
+    <div class="fcard reveal"><span class="ficon">🤖</span><h3>Local LLM Integration</h3><p>Ollama, LM Studio or any OpenAI-compatible endpoint for contextual insights.</p></div>
+    <div class="fcard reveal"><span class="ficon">📊</span><h3>Progress Dashboard</h3><p>Calendar heatmap, WPM charts, sortable session tables and practice schedules.</p></div>
+    <div class="fcard reveal"><span class="ficon">🔤</span><h3>ASCII Normalization</h3><p>Type « é, ñ, ß » with a standard QWERTY row — custom character maps included.</p></div>
+    <div class="fcard reveal"><span class="ficon">🎨</span><h3>Two Themes</h3><p>Atom One Light and Atom One Dark — no eye-strain during long sessions.</p></div>
+    <div class="fcard reveal"><span class="ficon">📁</span><h3>Custom Lessons</h3><p>Paste any code or prose, set difficulty, and start practicing immediately.</p></div>
+    <div class="fcard reveal"><span class="ficon">📦</span><h3>JSON Backup &amp; Restore</h3><p>Export and import your entire profile, lessons and statistics.</p></div>
 </section>
 
 <!-- PRIVACY -->
 <section id="privacy" class="privacy">
-    <h2 class="reveal">Built Around Privacy</h2>
-    <p class="reveal">No remote metrics, no third-party cloud storage, and no hidden logins. Everything starts and ends safely on your local device.</p>
+    <h2 class="reveal">Privacy</h2>
 
-    <div class="priv-grid reveal">
-        <div class="priv-item">
-            <div class="priv-item-icon">📡</div>
-            <div class="priv-item-text">
-                <strong>Zero Remote Tracking</strong>
-                <span>We collect absolutely no emails, names, cookies, or telemetry analytics whatsoever.</span>
-            </div>
-        </div>
-        <div class="priv-item">
-            <div class="priv-item-icon">💾</div>
-            <div class="priv-item-text">
-                <strong>Local IndexedDB Storage</strong>
-                <span>Your physical key stats, schedules, custom lessons, and history live in a secure, local DB.</span>
-            </div>
-        </div>
-        <div class="priv-item">
-            <div class="priv-item-icon">🛡️</div>
-            <div class="priv-item-text">
-                <strong>Private LLM Traffic</strong>
-                <span>All AI features connect strictly via local-host API endpoints (Ollama, LM Studio) of your choosing.</span>
-            </div>
-        </div>
-        <div class="priv-item">
-            <div class="priv-item-icon">🔌</div>
-            <div class="priv-item-text">
-                <strong>True Offline Availability</strong>
-                <span>Perfect for off-the-grid practicing. Practice lessons anywhere without requiring internet connections.</span>
-            </div>
-        </div>
-    </div>
+    <p class="reveal">LLM Typing Trainer collects <strong>only what it needs</strong> — and everything stays on your device.</p>
+
+    <ul class="reveal">
+        <li>No user accounts, no email, no name.</li>
+        <li>All sessions, key statistics, lessons and schedules are stored in IndexedBD on your machine.</li>
+        <li>User preferences (theme, keyboard layout, cursor style) live in <code>chrome.storage.local</code>.</li>
+        <li>The optional LLM API key is stored locally; only configured users send data to a local server.</li>
+        <li>No data is sold or shared with third parties.</li>
+        <li>No remote scripts — the extension loads only its own bundled files.</li>
+    </ul>
 
     <p class="reveal">
-        <button class="priv-toggle" id="privToggle">Inspect Saved Local Datastore Properties</button>
+        <button class="priv-toggle" id="privToggle">View full data list</button>
     </p>
 
     <div class="priv-details" id="privTable" role="region">
-        <table style="width:100%;border-collapse:collapse;font-size:0.9rem;color:var(--muted);text-align:left;">
-            <thead><tr style="border-bottom:1px solid var(--border);color:var(--text);">
-                <th style="padding:.75rem .5rem">Data Component</th><th style="padding:.75rem .5rem">Storage Target</th><th style="padding:.75rem .5rem">Primary Purpose</th>
+        <table style="width:100%;border-collapse:collapse;font-size:0.85rem;color:var(--muted);">
+            <thead><tr style="border-bottom:1px solid var(--border);text-align:left;">
+                <th style="padding:.6rem .5rem">Data</th><th style="padding:.6rem .5rem">Location</th><th style="padding:.6rem .5rem">Purpose</th>
             </tr></thead>
             <tbody>
-                <tr style="border-bottom:1px solid var(--border)"><td style="padding:.75rem .5rem;color:var(--text);">Typing Sessions</td><td style="padding:.75rem .5rem">IndexedDB (Local)</td><td style="padding:.75rem .5rem">Visualizing progressive charts, daily analytics, and consistency streaks.</td></tr>
-                <tr style="border-bottom:1px solid var(--border)"><td style="padding:.75rem .5rem;color:var(--text);">Key Statistics</td><td style="padding:.75rem .5rem">IndexedDB (Local)</td><td style="padding:.75rem .5rem">Drawing active physical keyboard heatmaps and guiding adaptive lesson synthesis.</td></tr>
-                <tr style="border-bottom:1px solid var(--border)"><td style="padding:.75rem .5rem;color:var(--text);">Custom Lesson Texts</td><td style="padding:.75rem .5rem">IndexedDB (Local)</td><td style="padding:.75rem .5rem">Storing custom material imported via paste or loaded from files.</td></tr>
-                <tr style="border-bottom:1px solid var(--border)"><td style="padding:.75rem .5rem;color:var(--text);">User Preferences</td><td style="padding:.75rem .5rem">chrome.storage.local</td><td style="padding:.75rem .5rem">Saving active layout configurations, hand sizes, cursor options, and theme modes.</td></tr>
-                <tr><td style="padding:.75rem .5rem;color:var(--text);">AI Context Prompts</td><td style="padding:.75rem .5rem">Local Network (User Host)</td><td style="padding:.75rem .5rem">Streaming line-by-line helper explanations from your local model engine.</td></tr>
+                <tr style="border-bottom:1px solid var(--border)"><td style="padding:.5rem">Typing sessions</td><td style="padding:.5rem">IndexedDB</td><td style="padding:.5rem">Charts &amp; history</td></tr>
+                <tr style="border-bottom:1px solid var(--border)"><td style="padding:.5rem">Key statistics</td><td style="padding:.5rem">IndexedDB</td><td style="padding:.5rem">Heatmaps &amp; adaptation</td></tr>
+                <tr style="border-bottom:1px solid var(--border)"><td style="padding:.5rem">Lesson text</td><td style="padding:.5rem">IndexedDB</td><td style="padding:.5rem">Practice material</td></tr>
+                <tr style="border-bottom:1px solid var(--border)"><td style="padding:.5rem">Preferences</td><td style="padding:.5rem">chrome.storage.local</td><td style="padding:.5rem">Personalisation</td></tr>
+                <tr><td style="padding:.5rem">LLM query text</td><td style="padding:.5rem">Network (localhost or user URL)</td><td style="padding:.5rem">Contextual insights</td></tr>
             </tbody>
         </table>
     </div>
@@ -505,15 +338,9 @@
 
 <!-- FOOTER LINE -->
 <div class="foot">
-    <ul class="foot-links">
-        <li><a href="#walkthrough">How It Works</a></li>
-        <li><a href="#features">Features</a></li>
-        <li><a href="#privacy">Privacy</a></li>
-        <li><a href="privacy.html">Privacy Policy</a></li>
-    </ul>
-    <div style="margin-top:1rem; opacity:0.75;">
-        Manifest V3 · Open Source · Chrome Extension Dashboard
-    </div>
+    Manifest V3 · Built with TypeScript, IndexedBD &amp; canvas charts ·
+    <a href="#">Store link</a> ·
+    <a href="privacy.html">Privacy Policy</a>
 </div>
 
 <script>
@@ -521,19 +348,11 @@
     const btn = document.getElementById('menuBtn');
     const menu = document.getElementById('menu');
     btn.addEventListener('click', () => {
-        const open = menu.classList.contains('active');
-        if (open) {
-            menu.classList.remove('active');
-            btn.textContent = '☰';
-        } else {
-            menu.classList.add('active');
-            btn.textContent = '✕';
-        }
+        const open = menu.style.display === 'flex';
+        menu.style.display = open ? '' : 'flex';
+        btn.textContent = open ? '☰' : '✕';
     });
-    menu.querySelectorAll('a').forEach(a => a.addEventListener('click', () => {
-        menu.classList.remove('active');
-        btn.textContent = '☰';
-    }));
+    menu.querySelectorAll('a').forEach(a => a.addEventListener('click', () => menu.style.display = ''));
 
     // Privacy toggle
     document.getElementById('privToggle').addEventListener('click', () => {
@@ -543,8 +362,46 @@
     // Scroll reveal (IntersectionObserver)
     const obs = new IntersectionObserver(entries => {
         entries.forEach(e => e.isIntersecting && e.target.classList.add('visible'));
-    }, { threshold: 0.1 });
+    }, { threshold: 0.12 });
     document.querySelectorAll('.reveal').forEach(el => obs.observe(el));
+
+    // Image pop-up on hover — smooth expand to 1280×800 at screen centre
+    const stepImages = document.querySelectorAll('.step-image img');
+    let overlay = null;
+    let hideTimeout = null;
+
+    stepImages.forEach(img => {
+        img.addEventListener('mouseenter', () => {
+            if (hideTimeout) { clearTimeout(hideTimeout); hideTimeout = null; }
+
+            stepImages.forEach(other => { if (other !== img) other.classList.add('dim'); });
+
+            if (!overlay) {
+                overlay = document.createElement('div');
+                overlay.className = 'img-overlay';
+                document.body.appendChild(overlay);
+            }
+
+            overlay.innerHTML = '';
+            const clone = img.cloneNode();
+            overlay.appendChild(clone);
+
+            requestAnimationFrame(() => overlay.classList.add('visible'));
+        });
+
+        img.addEventListener('mouseleave', () => {
+            stepImages.forEach(other => other.classList.remove('dim'));
+
+            hideTimeout = setTimeout(() => {
+                if (overlay) {
+                    overlay.classList.remove('visible');
+                    overlay.addEventListener('transitionend', () => {
+                        if (overlay) { overlay.remove(); overlay = null; }
+                    }, { once: true });
+                }
+            }, 100);
+        });
+    });
 </script>
 
 </body>
