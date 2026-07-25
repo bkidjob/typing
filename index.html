@@ -366,6 +366,9 @@
     document.querySelectorAll('.reveal').forEach(el => obs.observe(el));
 
     // Image pop-up on hover — smooth expand to 1280×800 at screen centre
+    // Disabled on touch devices (hover: none) where it doesn't work reliably
+    if (!window.matchMedia('(hover: hover)').matches) return;
+
     const stepImages = document.querySelectorAll('.step-image img');
     let overlay = null;
     let hideTimeout = null;
