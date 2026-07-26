@@ -68,6 +68,36 @@
         .nav-toggle::after { content: 'Expand images on hover'; position: absolute; top: calc(100% + 8px); left: 50%; transform: translateX(-50%) translateY(-4px); background: var(--surface-2); color: var(--muted); font-size: 11px; padding: 4px 10px; border-radius: 6px; white-space: nowrap; opacity: 0; pointer-events: none; transition: opacity .2s, transform .2s; z-index: 200; }
         .nav-toggle:hover::after { opacity: 1; transform: translateX(-50%) translateY(0); }
 
+        /* ── FIRST-VRUN ZOOM NOTICE ──────────── */
+        .nav-toggle.zoom-notice::after { opacity: 1 !important; transform: translateX(-50%) translateY(0) !important;
+            background: var(--accent); color: #fff; font-weight: 600; box-shadow: 0 4px 16px rgba(91,155,213,.4); }
+        .nav-toggle.zoom-notice {
+            animation: togglePulse 1.2s ease-in-out 3;
+        }
+        @keyframes togglePulse {
+            0%, 100% { transform: scale(1); box-shadow: none; }
+            50% { transform: scale(1.08); box-shadow: 0 0 0 6px rgba(91,155,213,.2); }
+        }
+
+        .expand-badge {
+            position: absolute; bottom: 12px; right: 12px;
+            background: rgba(91,155,213,.92); color: #fff;
+            font-size: 11.5px; font-weight: 600; padding: 5px 12px;
+            border-radius: 20px; letter-spacing: .2px;
+            box-shadow: 0 4px 14px rgba(91,155,213,.45);
+            opacity: 0; transform: translateY(8px) scale(.95);
+            transition: opacity .5s ease, transform .5s ease;
+            pointer-events: none; z-index: 10;
+        }
+        .expand-badge.show { opacity: 1; transform: translateY(0) scale(1); }
+        .expand-badge.hide { opacity: 0; transform: translateY(-6px) scale(.92); transition-duration: .35s; }
+        .expand-badge::before {
+            content: ''; position: absolute; top: -7px; right: 15px;
+            border-right: 8px solid transparent; border-bottom: 7px solid rgba(91,155,213,.92);
+        }
+        .expand-badge .badge-up { display: inline-block; margin-right: 3px; font-size: 13px; }
+        @media (max-width: 768px) { .expand-badge { font-size: 10.5px; padding: 4px 9px; bottom: 8px; right: 8px; } }
+
         /* ── HERO ────────────────────────────── */
         .hero {
             padding: 4rem 2rem 2rem; text-align: center;
@@ -240,6 +270,7 @@
     <div class="step-row reveal">
         <div class="step-image">
             <img src="screen01.png" alt="Typing interface showing a Rust code lesson with live keyboard heatmap and contextual LLM insights panel on the right">
+            <span class="expand-badge" id="expandBadge"><span class="badge-up">↑</span> Toggle on to zoom screenshots</span>
         </div>
         <div class="step-text">
             <span class="step-label">Step 1</span>
@@ -384,8 +415,24 @@
     const updateToggle = () => { toggleTrack.classList.toggle('on', expandEnabled); };
     updateToggle();
 
+    // First-visit zoom notice: pulse toggle + badge on first step image
+    const zestSeen = localStorage.getItem('imgExpandSeen');
+    if (!zestSeen) {
+        const toggle = document.getElementById('expandToggle');
+        toggle.classList.add('zoom-notice');
+        const badge = document.getElementById('expandBadge');
+        if (badge) requestAnimationFrame(() => badge.classList.add('show'));
+    }
+
     document.getElementById('expandToggle').addEventListener('click', () => {
         expandEnabled = !expandEnabled;
+        // Dismiss first-visit notice on first interaction
+        if (!localStorage.getItem('imgExpandSeen')) {
+            localStorage.setItem('imgExpandSeen', '1');
+            document.getElementById('expandToggle').classList.remove('zoom-notice');
+            const badge = document.getElementById('expandBadge');
+            if (badge) { badge.classList.remove('show'); badge.classList.add('hide'); }
+        }
         localStorage.setItem('imgExpand', expandEnabled ? 'on' : 'off');
         updateToggle();
         if (!expandEnabled && overlay) {
