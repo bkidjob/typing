@@ -121,10 +121,9 @@
     <p>Daily goals (character count, time limit, auto-pause) and lockout expiry timestamps are stored in IndexedDB and <code>chrome.storage.local</code>.</p>
 
     <h3>LLM Query Payloads (network traffic only)</h3>
-    <p>When you use the Insights Panel or Adaptive Lesson Generation, the following data is sent to your configured LLM endpoint:</p>
+    <p>When you use the Insights Panel, the following data is sent to your configured LLM endpoint:</p>
     <ul>
         <li>The text of the current code line or sentence being typed</li>
-        <li>Your most common error characters and trouble keys (for lesson generation)</li>
     </ul>
 
     <!-- ── Data We Do NOT Collect ───────── -->
@@ -144,9 +143,8 @@
     <ul>
         <li><strong>Typing speed and accuracy tracking</strong> — WPM, CPM, and accuracy charts</li>
         <li><strong>Keyboard heatmaps</strong> — speed and error overlays on the virtual keyboard</li>
-        <li><strong>Adaptive lesson generation</strong> — generating lessons focused on your trouble keys</li>
         <li><strong>Practice scheduling</strong> — daily goals, offline lockout enforcement, progress calendar</li>
-        <li><strong>LLM insights</strong> — contextual explanations for lines or paragraphs you are typing</li>
+        <li><strong>LLM insights</strong> — contextual explanations for lines or paragraphs you are typing</li></li>
         <li><strong>Profile backup &amp; restore</strong> — JSON export/import for migration or archiving</li>
     </ul>
 
